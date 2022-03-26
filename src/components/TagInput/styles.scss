@@ -1,0 +1,40 @@
+.tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid $border;
+  border-radius: $border-radius;
+  padding: 4px;
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    .tag {
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+      padding: 2px 8px;
+      margin: 4px;
+      border: 1px solid $border;
+      border-radius: $border-radius;
+      transition: background-color 0.2s, color 0.2s;
+      &:hover {
+        background-color: $background-dark-hover;
+        color: $primary;
+      }
+      i {
+        margin-left: 4px;
+        cursor: pointer;
+      }
+    }
+    form {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      input {
+        width: 100%;
+        border: none;
+        outline: none;
+      }
+    }
+  }
+}

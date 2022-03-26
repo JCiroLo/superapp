@@ -1,0 +1,23 @@
+{
+  "success": {
+    "toast": true,
+    "position": "top-end",
+    "showConfirmButton": false,
+    "timer": 3000,
+    "icon": "success"
+  },
+  "error": {
+    "toast": true,
+    "position": "top-end",
+    "showConfirmButton": false,
+    "timer": 3000,
+    "icon": "error"
+  },
+  "warning": {
+    "toast": true,
+    "position": "top-end",
+    "showConfirmButton": false,
+    "timer": 3000,
+    "icon": "warning"
+  }
+}

@@ -1,0 +1,105 @@
+.container {
+  .project-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 15px 0;
+
+    h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+
+      i {
+        font-size: 18px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .questions-table {
+    .custom-accordion {
+      margin-bottom: 10px;
+      .accordion-toggler {
+        p {
+          margin: 0;
+        }
+      }
+      .questions {
+        .question {
+          &:not(:last-child) {
+            border-bottom: 1px solid $border;
+            padding-bottom: 15px;
+          }
+
+          .question-summary {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 15px;
+
+            .field {
+              flex-basis: 20%;
+            }
+            .content {
+              flex-basis: 80%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .project-comments {
+    .project-comment {
+      position: relative;
+      margin: 10px 0;
+      padding: 5px 10px;
+      border-radius: $border-radius;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(black, 0.02);
+        .comment-actions {
+          opacity: 1;
+        }
+      }
+
+      .comment-header {
+        display: flex;
+        align-items: center;
+
+        .comment-user {
+          font-weight: bold;
+        }
+        .comment-date {
+          margin-left: 5px;
+          font-weight: 300;
+          font-size: 12px;
+          color: #999;
+        }
+      }
+      .comment-actions {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 10px;
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+
+        button {
+          font-size: 18px !important;
+        }
+      }
+
+      .comment {
+      }
+    }
+  }
+}

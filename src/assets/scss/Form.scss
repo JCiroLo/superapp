@@ -1,0 +1,39 @@
+form.app-form {
+  display: flex;
+  flex-direction: column;
+
+  .form-field {
+    height: max-content;
+    margin: 10px 0;
+
+    label {
+      margin: 5px 0;
+    }
+
+    textarea,
+    input {
+      padding: 8px 12px;
+      border: 1px solid $border;
+      border-radius: $border-radius;
+      outline: none;
+      transition: border-color 0.2s;
+      &:not(.col-6) {
+        width: 100%;
+      }
+      &:focus {
+        border-color: $primary;
+      }
+    }
+
+    select {
+      padding: 8px 12px;
+      border: 1px solid $border;
+      border-radius: $border-radius;
+      outline: none;
+      transition: border-color 0.2s;
+      &:focus {
+        border-color: $primary;
+      }
+    }
+  }
+}

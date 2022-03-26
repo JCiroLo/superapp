@@ -1,0 +1,26 @@
+header {
+  border-bottom: 1px solid $border;
+  height: $navbar-height;
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+
+      img {
+        height: $navbar-height;
+        padding: 5px;
+      }
+      span {
+        font-size: 22px;
+        font-weight: 600;
+        color: $primary;
+      }
+    }
+  }
+}
