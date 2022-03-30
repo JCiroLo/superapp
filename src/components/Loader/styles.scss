@@ -12,6 +12,7 @@ $thickness: 7px;
   height: 100%;
   z-index: 100000;
   background-color: rgba(black, 0.1);
+  backdrop-filter: blur(2px);
   transition: opacity 0.2s;
 
   .loader-body {
@@ -29,7 +30,6 @@ $thickness: 7px;
       height: $radius;
       border: $thickness solid white;
       border-radius: 50%;
-      box-shadow: 0 0 10px rgba(black, 0.1) inset, 0 0 10px rgba(black, 0.1);
     }
     .loader-line {
       width: $radius;
@@ -56,6 +56,6 @@ $thickness: 7px;
 .fade-leave-to {
   opacity: 0;
   .loader-body {
-    transform: scale(0.5) rotate(-90deg);
+    transform: scale(0.5);
   }
 }
