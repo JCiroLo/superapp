@@ -9,14 +9,14 @@
   height: 100vh;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(2px);
   transition: opacity 0.2s;
 
   .custom-modal-content {
     display: flex;
     flex-direction: column;
     background-color: white;
-    min-width: 500px;
-    max-height: 90vh;
+    min-width: min(90vw, 500px);
     padding: 0 12px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     border-radius: $border-radius;
@@ -43,7 +43,7 @@
     }
 
     &.max-height {
-      min-height: 90vh;
+      height: calc(90vh);
     }
 
     .custom-modal-header {

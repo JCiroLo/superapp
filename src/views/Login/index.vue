@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-login
-  .background
+  .background.d-none.d-lg-flex
     svg(viewBox="0 0 500 150" preserveAspectRatio="none")
       path.back2(d="M-79.81,-45.92 C30.22,131.95 299.98,-65.69 311.26,317.75 L0.00,150.22 L-18.87,75.62 Z")
       path.back1(d="M-79.81,-45.92 C30.22,131.95 299.98,-65.69 311.26,317.75 L0.00,150.22 L-18.87,75.62 Z")

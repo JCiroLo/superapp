@@ -1,9 +1,12 @@
 <template lang="pug">
-header
+header(:class="{collapsed: navbarState}")
   .container
     router-link.brand(to="/")
       img(:src="require('../../assets/img/icon.png')" alt="alt")
       span Super App City 
+    .navbar-toggler
+      button.btn.btn-text(@click="switchNavbar")
+        i.fas.fa-bars.fa-fw
     .navbar-actions
       router-link.btn.btn-text(to="/" v-if="isAuthenticated")
         i.fas.fa-tasks-alt.fa-fw

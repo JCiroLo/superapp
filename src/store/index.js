@@ -3,13 +3,15 @@ import { createStore } from 'vuex'
 const store = createStore({
   state: {
     user: null,
-    loading: false
+    loading: false,
+    navbar: false
   },
   getters: {
     isAuthenticated: state => (state.user ? true : false),
     user: state => state.user,
     loading: state => state.loading,
-    hasRole: state => payload => state.user.userRoles.find(e => e === payload)
+    hasRole: state => payload => state.user.userRoles.find(e => e === payload),
+    navbarState: state => state.navbar
   },
   mutations: {
     loginUser: (state, payload) => {
@@ -20,6 +22,9 @@ const store = createStore({
     },
     setLoading: (state, payload) => {
       state.loading = payload
+    },
+    switchNavbar: state => {
+      state.navbar = !state.navbar
     }
   }
 })

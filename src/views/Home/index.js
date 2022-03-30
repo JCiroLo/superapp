@@ -25,7 +25,8 @@ export default {
       currentTab: 0,
       currentProject: $Project.getSchema(),
       action: null,
-      projectToDelete: null // ID
+      projectToDelete: null, // ID
+      thumbnail: null
     }
   },
   filters: {
@@ -75,6 +76,16 @@ export default {
       }
       this.currentTab += action
     },
+    handleChangeImage (e) {
+      const files = e.target.files || e.dataTransfer.files
+      if (!files.length) {
+        return
+      }
+      this.thumbnail = files[0]
+    },
+    renderThumbnail () {
+      return this.thumbnail ? URL.createObjectURL(this.thumbnail) : null
+    },
     handleAddCronograma (element) {
       this.currentProject.cronograma.push(element)
     },
@@ -117,7 +128,8 @@ export default {
         !this.currentProject.localizacionLong ||
         !this.currentProject.localizacionLat ||
         !this.currentProject.presupuesto ||
-        !this.currentProject.fecha
+        !this.currentProject.fecha ||
+        !this.thumbnail
       ) {
         this.$swal({
           ...swal2Config.error,
@@ -139,12 +151,29 @@ export default {
       } = this.currentProject
       newProject.localizacion = [localizacionLong, localizacionLat]
 
-      const { status, data } = await $Project.createProject(newProject)
+      const {
+        status: statusProject,
+        data: dataProject
+      } = await $Project.createProject(newProject)
 
-      if (!status) {
+      if (!statusProject) {
         this.$swal({
           ...swal2Config.error,
-          title: data
+          title: dataProject
+        })
+        this.setLoading(false)
+        return
+      }
+
+      const {
+        status: statusThumnb,
+        data: dataThumb
+      } = await $Project.insertImage(newProject.nombre, this.thumbnail)
+
+      if (!statusThumnb) {
+        this.$swal({
+          ...swal2Config.error,
+          title: 'No se pudo subir la imagen.'
         })
       } else {
         this.$swal({
@@ -156,6 +185,13 @@ export default {
       }
 
       this.setLoading(false)
+    },
+    async getThumbnail (projectName) {
+      const { status, data } = await $Project.getProjectImage(projectName)
+      if (status) {
+        return `data:image/jpeg;base64,${data}`
+      }
+      return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYMZt8DcAt94DmfTzFV7BGzcm3FLFr3XqnY4-0hKSC9h1n11jFKp-Nqo59cjKXLS8V8qY&usqp=CAU'
     }
   },
   async beforeMount () {
@@ -170,7 +206,12 @@ export default {
           message: 'No existe ningún proyecto, crea uno primero'
         }
       } else {
-        this.projects = data
+        this.projects = await Promise.all(
+          data.map(async p => {
+            const img = await this.getThumbnail(p.nombre)
+            return { ...p, thumbnail: img }
+          })
+        )
       }
     } else {
       this.errorProjects = {

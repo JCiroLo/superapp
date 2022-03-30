@@ -10,7 +10,8 @@
       template(#accordion-toggler)
         p 
           i.fas.fa-chart-bar.fa-fw.me-2
-          | Ranking (tipo 1)
+          | Ranking
+        span {{rankingQuestions.length}}
       template(#accordion-content)
         .questions  
           .question(v-for="(question, index) in rankingQuestions" :key="index")
@@ -36,7 +37,8 @@
       template(#accordion-toggler)
         p 
           i.fas.fa-sack-dollar.fa-fw.me-2
-          | $100 (tipo2)
+          | $100 
+        span {{hundredDollarsQuestions.length}}
       template(#accordion-content)
         .questions  
           .question(v-for="(question, index) in hundredDollarsQuestions" :key="index")
@@ -62,7 +64,8 @@
       template(#accordion-toggler)
         p 
           i.fab.fa-kickstarter-k.fa-fw.me-2
-          | Kano Model (tipo 6)
+          | Kano Model
+        span {{kanoModelQuestions.length}}
       template(#accordion-content)
         .questions  
           .question(v-for="(question, index) in kanoModelQuestions" :key="index")
@@ -136,9 +139,9 @@
     template(#modal-body)
       form.app-form(noValidate @submit.prevent="addComment")
         .form-field
-          input#username.w-100(type="text" placeholder="Nombre (opcional)" v-model="newComment.username")
+          input.w-100(type="text" placeholder="admin" disabled)
         .form-field
-          textarea#comment.w-100(rows="6" placeholder="Comentario" v-model="newComment.comment")
+          textarea#comment.w-100(rows="6" placeholder="Comentario" v-model="newComment")
     template(#modal-footer)
       .d-flex.justify-content-end
         button.btn.btn-main-outline(@click="modal.createComment = false") Cancelar

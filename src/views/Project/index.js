@@ -33,7 +33,7 @@ export default {
         opciones: [],
         obligatorio: false
       },
-      newComment: { username: null, comment: null },
+      newComment: null,
       projectComments: []
     }
   },
@@ -68,12 +68,38 @@ export default {
       } else {
         this.$swal({
           ...swal2Config.error,
-          title: 'Hubo un error al crear pregunta. Inténtelo de nuevo.'
+          title:
+            'Hubo un error al crear pregunta. Inténtalo de nuevo más tarde.'
         })
       }
       this.setLoading(false)
     },
-    async addComment () {}
+    async addComment () {
+      if (!this.newComment) {
+        this.$swal({
+          ...swal2Config.error,
+          title: 'Primero escribe un comentario.'
+        })
+        return
+      }
+      this.setLoading(true)
+      const { status, data } = await $Project.insertComment(
+        this.$route.params.projectName,
+        this.newComment
+      )
+      if (!status) {
+        this.$swal({
+          ...swal2Config.error,
+          title:
+            'Hubo un error intentando crear el comentario. Inténtalo de nuevo más tarde.'
+        })
+        this.setLoading(false)
+        return
+      }
+      this.projectComments.push(data)
+      this.newComment = null
+      this.setLoading(false)
+    }
   },
   async beforeMount () {
     this.setLoading(true)

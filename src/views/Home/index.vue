@@ -10,7 +10,10 @@
         h3 {{errorProjects.message}}
     .app-projects(v-else)
       .project(v-for="(project, index) in projects" :key="index")
-        h2.project-title(@click="$router.push({ name: 'Project', params: { projectName: project.nombre } })") {{project.nombre}}
+        .project-summary(@click="$router.push({ name: 'Project', params: { projectName: project.nombre } })")
+          .project-thumbnail
+            img(:src="project.thumbnail", alt=" ")
+          h2.project-title {{project.nombre}}
         .project-actions
           .project-hidden-actions
             button.btn.btn-icon(@click="(projectToDelete = project)"): i.fas.fa-trash.fa-fw
@@ -19,7 +22,7 @@
 
   Modal(:show="modalVisibility" @closeModal="toggleModalVisibility('close')" maxHeight)
     template(#modal-header)
-      h4.m-0: b Crear proyecto {{action}}
+      h4.m-0: b {{action === 'create' ? 'Crear' : 'Editar' }} proyecto 
     template(#modal-body)
       .form-tabs
         .tabs
@@ -77,6 +80,12 @@
                 .form-field
                   label Fecha
                   input#fecha(type="date" v-model="currentProject.fecha")
+                .form-field
+                  label Miniatura
+                  .image-input
+                    .image-input-preview
+                      img(:src="renderThumbnail()")
+                    input(type="file" accept="image/*" @change="handleChangeImage")
     template(#modal-footer)
       transition(name="fade" mode="out-in")
         .d-flex.justify-content-end(v-if="currentTab === 0")

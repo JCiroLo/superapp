@@ -82,7 +82,6 @@
         flex-direction: column;
         padding: 10px;
         border-radius: 0 0 5px 5px;
-        background-color: white;
         width: 60%;
 
         .form-field {
@@ -125,6 +124,21 @@
         button {
           width: 100%;
           margin-top: 5px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .container-login {
+    .background {
+    }
+    .login-box {
+      flex-direction: column;
+      .login-form {
+        form{
+          width: auto;
         }
       }
     }

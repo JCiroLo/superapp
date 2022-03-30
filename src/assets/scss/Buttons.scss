@@ -17,7 +17,7 @@
   background-color: transparent;
   color: $primary;
   border-radius: $border-radius;
-  border: 2px solid $primary;
+  border: 1px solid $primary;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   &:hover {
     background-color: $primary;

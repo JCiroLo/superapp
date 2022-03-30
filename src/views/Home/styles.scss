@@ -34,7 +34,6 @@ button.create-project {
   }
 }
 .projects-table {
-  // border: 1px solid $border;
   margin: 20px;
   padding: 10px;
   border-radius: $border-radius;
@@ -69,7 +68,6 @@ button.create-project {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 5px;
-      padding: 10px 15px;
       cursor: pointer;
       border-radius: $border-radius;
       transition: background-color 0.2s;
@@ -82,15 +80,37 @@ button.create-project {
           }
         }
       }
-      h2.project-title {
+      .project-summary {
         flex-grow: 1;
-        flex-shrink: 1;
-        margin: 0;
-        font-size: 20px;
+        display: flex;
+        align-items: center;
+        padding: 10px 0 10px 15px;
+        .project-thumbnail {
+          img {
+            height: 60px;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: $border-radius;
+            margin-right: 15px;
+          }
+        }
+        h2.project-title {
+          flex-grow: 1;
+          flex-shrink: 1;
+          margin: 0;
+          font-size: 20px;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 2; /* number of lines to show */
+          line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
       }
       .project-actions {
         display: flex;
         align-items: center;
+        padding-right: 15px;
         .project-hidden-actions {
           margin-right: 15px;
           opacity: 0;
@@ -99,14 +119,14 @@ button.create-project {
         }
         button {
           padding: 5px;
-          font-size: 18px;
+          font-size: 20px;
         }
       }
     }
   }
 }
 .form-tabs {
-  width: 75vw;
+  min-width: 75vw;
   .tabs {
     display: flex;
     justify-content: center;
@@ -181,4 +201,21 @@ button.create-project {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+@media (max-width: 992px) {
+  .projects-table {
+    margin: 20px 0;
+    padding: 0;
+    .app-projects {
+      padding: 0;
+      .project {
+        .project-actions {
+          .project-hidden-actions {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 }

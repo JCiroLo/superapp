@@ -1,10 +1,10 @@
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { ROLES } from '../../store/types'
 
 export default {
   name: 'Navbar',
   computed: {
-    ...mapGetters(['isAuthenticated', 'hasRole'])
+    ...mapGetters(['isAuthenticated', 'hasRole', 'navbarState'])
   },
   data () {
     return {
@@ -12,6 +12,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['switchNavbar']),
     logoutUser () {
       this.$store.commit('logoutUser')
       sessionStorage.removeItem('userData')

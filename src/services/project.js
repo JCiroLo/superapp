@@ -45,6 +45,17 @@ Projects.getUserProjects = async () => {
   }
 }
 
+Projects.getProjectImage = async projectName => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/proyectos/proyectos/imagen/binary/${projectName}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
 Projects.createProject = async projectData => {
   try {
     const { data } = await axios.post(
@@ -63,6 +74,26 @@ Projects.createProject = async projectData => {
       status: false,
       data: 'Ha ocurrido un problema, inténtelo de nuevo'
     }
+  }
+}
+
+Projects.insertImage = async (projectName, image) => {
+  const formData = new FormData()
+  formData.append('image', image)
+  try {
+    const { data } = await axios.put(
+      `${API_URL}/proyectos/proyectos/imagen/poner/${projectName}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${store.getters.user.access_token}`
+        }
+      }
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
   }
 }
 
@@ -137,6 +168,25 @@ Projects.getComments = async projectName => {
     return {
       status: false,
       data: 'Ha ocurrido un problema, inténtelo de nuevo'
+    }
+  }
+}
+
+Projects.insertComment = async (projectName, comment) => {
+  try {
+    console.log(store.getters.user.username)
+    const { data } = await axios.put(
+      `${API_URL}/suscripciones/suscripciones/comentarios/${projectName}`,
+      { username: store.getters.user.username, comentario: comment }
+    )
+    return {
+      status: true,
+      data: { username: store.getters.user.username, comentario: comment }
+    }
+  } catch (e) {
+    return {
+      status: false,
+      data: 'Error'
     }
   }
 }
