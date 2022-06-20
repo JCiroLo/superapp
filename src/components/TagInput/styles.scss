@@ -4,6 +4,21 @@
   border: 1px solid $border;
   border-radius: $border-radius;
   padding: 4px;
+  &.read-only {
+    padding: 0;
+    border: none;
+    .tags {
+      cursor: pointer;
+      .tag {
+        i {
+          display: none;
+        }
+      }
+    }
+    form {
+      display: none !important;
+    }
+  }
   .tags {
     display: flex;
     flex-wrap: wrap;
@@ -11,9 +26,8 @@
     .tag {
       display: flex;
       align-items: center;
-      margin-right: 8px;
-      padding: 2px 8px;
-      margin: 4px;
+      padding: 0 2px 0 4px;
+      margin: 2px 4px;
       border: 1px solid $border;
       border-radius: $border-radius;
       transition: background-color 0.2s, color 0.2s;
@@ -32,6 +46,7 @@
       flex-grow: 1;
       input {
         width: 100%;
+        padding: 4px 8px;
         border: none;
         outline: none;
       }

@@ -16,41 +16,18 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    min-width: min(90vw, 500px);
-    padding: 0 12px;
+    max-height: 90vh;
+    min-width: 500px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     border-radius: $border-radius;
-    overflow-y: auto;
     transform: scale(1);
     transition: transform 0.2s ease-out;
-
-    &::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: $border-radius;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: $border-radius;
-
-      &:hover {
-        background-color: #bbb;
-      }
-    }
-
-    &.max-height {
-      height: calc(90vh);
-    }
 
     .custom-modal-header {
       position: relative;
       display: flex;
       justify-content: space-between;
-      padding: 12px 0;
+      padding: 12px;
 
       .custom-modal-header-slot {
         max-width: calc(100% - 40px);
@@ -58,15 +35,18 @@
 
       .close-modal {
         position: absolute;
-        right: 0;
+        right: 12px;
       }
     }
     .custom-modal-body {
-      padding: 12px 0;
+      padding: 12px;
+      max-width: 90vw;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
     .custom-modal-footer {
       margin-top: auto;
-      padding: 12px 0;
+      padding: 12px;
     }
   }
 }

@@ -9,6 +9,28 @@ const API_URL = process.env.VUE_APP_API_URL
 
 const User = {}
 
+User.getUserByUsername = async username => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/usuarios/users/findUsername/${username}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.getUserRoles = async username => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/usuarios/users/verRoleUsuario/${username}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
 User.login = async userData => {
   try {
     const { data: auth } = await axios.post(
@@ -22,19 +44,12 @@ User.login = async userData => {
       }
     )
 
-    const headers = {
-      Authorization: `Bearer ${auth.access_token}`
-    }
+    axios.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${auth.access_token}`
 
-    const { data: user } = await axios.get(
-      `${API_URL}/usuarios/users/findUsername/${userData.username}`,
-      { headers }
-    )
-
-    const { data: userRoles } = await axios.get(
-      `${API_URL}/usuarios/users/verRoleUsuario/${userData.username}`,
-      { headers }
-    )
+    const { data: user } = await User.getUserByUsername(userData.username)
+    const { data: userRoles } = await User.getUserRoles(userData.username)
 
     const mergedUser = {
       ...auth,
@@ -50,7 +65,79 @@ User.login = async userData => {
 
     return { status: true, data: mergedUser }
   } catch (e) {
+    console.log(e)
     return { status: false, data: 'Usuario o contraseña incorrectos' }
+  }
+}
+
+User.getAllUsers = async () => {
+  try {
+    const { data } = await axios.get(`${API_URL}/usuarios/users/listar/`)
+    console.log(data)
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.updateUser = async (username, userData) => {
+  console.log(userData)
+  try {
+    const { data } = await axios.put(
+      `${API_URL}/usuarios/users/editar/${username}`,
+      userData
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.createUser = async userData => {
+  try {
+    const { data } = await axios.post(
+      `${API_URL}/usuarios/users/crearUsuarioMod/`,
+      userData
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.requestDeleteUser = async username => {
+  try {
+    const { data } = await axios.put(
+      `${API_URL}/usuarios/users/eliminarAdmin/${username}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.deleteUser = async username => {
+  const formData = new FormData()
+  formData.append('username', username)
+  try {
+    const { data } = await axios.delete(
+      `${API_URL}/interventor/interventor/eliminarUsuarioDefinitivamente/`,
+      { data: formData }
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.deleteRequestDeleteUser = async username => {
+  try {
+    const { data } = await axios.put(
+      `${API_URL}/usuarios/users/eliminarPeticionAdmin/${username}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
   }
 }
 

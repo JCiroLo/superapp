@@ -1,11 +1,19 @@
 header {
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: rgba(white, 0.75);
+  backdrop-filter: blur(5px);
   border-bottom: 1px solid $border;
   height: $navbar-height;
 
-  .container {
+  .main-navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 15px;
 
     .brand {
       display: flex;
@@ -27,31 +35,36 @@ header {
     .navbar-toggler {
       display: none;
     }
+
+    .navbar-actions {
+      span.separator {
+        border-left: 1px solid $border;
+      }
+    }
   }
 }
 
 @media (max-width: 992px) {
   header {
     &.collapsed {
-      .container {
+      .main-navbar {
         .navbar-actions {
           opacity: 1;
           visibility: visible;
-          background-color: white;
           transform: translateX(0);
         }
       }
     }
-    .container {
+    .main-navbar {
       .navbar-toggler {
         display: block;
       }
       .navbar-actions {
         position: fixed;
+        z-index: 100;
         top: $navbar-height;
-        left: 0;
+        width: $navbar-width;
         right: 0;
-        z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -59,10 +72,15 @@ header {
         padding: 15px;
         opacity: 0;
         visibility: hidden;
-        background-color: white;
+        background-color: rgba(white, 0.75);
+        backdrop-filter: blur(5px);
         border-bottom: 1px solid $border;
+        border-left: 1px solid $border;
         transform: translateX(100%);
         transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+      }
+      span.separator {
+        border-left: none;
       }
     }
   }

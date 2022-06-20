@@ -11,6 +11,7 @@ import Modal from './components/Modal/index.vue'
 import Loader from './components/Loader/index.vue'
 import TagInput from './components/TagInput/index.vue'
 import ListInput from './components/ListInput/index.vue'
+import Sidebar from './components/Sidebar/index.vue'
 
 import 'sweetalert2/dist/sweetalert2.min.css'
 
@@ -23,5 +24,6 @@ createApp(App)
   .component('Loader', Loader)
   .component('TagInput', TagInput)
   .component('ListInput', ListInput)
+  .component('Sidebar', Sidebar)
   .mixin(titleMixin)
   .mount('#app')

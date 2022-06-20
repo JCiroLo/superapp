@@ -11,6 +11,14 @@ const routes = [
     }
   },
   {
+    path: '/analyticis',
+    name: 'Analytics',
+    component: () => import('../views/Analytics/index.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login/index.vue'),
@@ -30,6 +38,15 @@ const routes = [
     path: '/requests',
     name: 'Peticiones',
     component: () => import('../views/Requests/index.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  ,
+  {
+    path: '/users',
+    name: 'Usuarios',
+    component: () => import('../views/Users/index.vue'),
     meta: {
       requiresAuth: true
     }

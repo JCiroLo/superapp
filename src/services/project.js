@@ -1,30 +1,31 @@
 import axios from 'axios'
 import store from '../store'
+import Utils from './utils'
 
-axios.defaults.headers.common[
+/* axios.defaults.headers.common[
   'Authorization'
-] = `Bearer ${store.getters.user.access_token}`
+] = `Bearer ${store.getters.user.access_token}` */
 
 const API_URL = process.env.VUE_APP_API_URL
 
 const Projects = {}
 
 Projects.getSchema = () => ({
-  nombre: null,
-  resumen: null,
-  descripcion: null,
-  objetivos: null,
-  principalItos: null,
+  nombre: '',
+  resumen: '',
+  descripcion: '',
+  objetivos: '',
+  principalItos: '',
   cronograma: [],
   palabrasClave: [],
-  localizacionLong: null,
-  localizacionLat: null,
+  localizacion: [null, null],
   presupuesto: null,
   fecha: null,
   enabled: true,
   estadoProyecto: 1,
   proyectoDesarrollo: [1],
-  creador: null
+  creador: null,
+  gamificacion: false
 })
 
 Projects.getUserProjects = async () => {
@@ -45,6 +46,20 @@ Projects.getUserProjects = async () => {
   }
 }
 
+Projects.getProject = async projectName => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/proyectos/proyectos/ver/proyecto/${projectName}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    if (e.response.status === 302) {
+      return { status: true, data: e.response.data }
+    }
+    return { status: false, data: 'Error' }
+  }
+}
+
 Projects.getProjectImage = async projectName => {
   try {
     const { data } = await axios.get(
@@ -56,10 +71,37 @@ Projects.getProjectImage = async projectName => {
   }
 }
 
-Projects.createProject = async projectData => {
+Projects.createProject = async (projectData, userData) => {
+  projectData.creador = userData.username
+  projectData.fecha = new Date(projectData.fecha).toLocaleDateString('en-CA')
+
   try {
     const { data } = await axios.post(
       `${API_URL}/proyectos/proyectos/crear/`,
+      projectData
+    )
+    return { status: true, data }
+  } catch (e) {
+    if (e.response.status === 400) {
+      return {
+        status: false,
+        data: 'Nombre de proyecto no disponible.'
+      }
+    }
+    return {
+      status: false,
+      data: 'Ha ocurrido un problema, inténtelo de nuevo'
+    }
+  }
+}
+
+Projects.updateProject = async (projectData, userData) => {
+  // ELIMINAR PROPIEDADES EXTRA
+  delete projectData.thumbnail
+
+  try {
+    const { data } = await axios.post(
+      `${API_URL}/proyectos/proyectos/editarProyectos/${userData.username}/`,
       projectData
     )
     return { status: true, data }
@@ -105,6 +147,23 @@ Projects.requestDeleteProject = async projectName => {
     return {
       status: true,
       data: 'Se ha enviado petición para eliminar el proyecto'
+    }
+  } catch (e) {
+    return {
+      status: false,
+      data: 'Ha ocurrido un error. Intnéntelo de nuevo más tarde'
+    }
+  }
+}
+
+Projects.deleteRequestDeleteProject = async projectName => {
+  try {
+    await axios.put(
+      `${API_URL}/proyectos/proyectos/eliminarPeticionAdmin/${projectName}`
+    )
+    return {
+      status: true,
+      data: 'Petición eliminada correctamente.'
     }
   } catch (e) {
     return {
@@ -161,7 +220,7 @@ Projects.addQuestion = async (projectName, questionData) => {
 Projects.getComments = async projectName => {
   try {
     const { data } = await axios.get(
-      `${API_URL}/suscripciones/suscripciones/comentarios/ver/${projectName}`
+      `${API_URL}/suscripciones/suscripciones/ver/comentarios/${projectName}`
     )
     return { status: true, data }
   } catch (error) {
@@ -172,16 +231,35 @@ Projects.getComments = async projectName => {
   }
 }
 
-Projects.insertComment = async (projectName, comment) => {
+Projects.insertComment = async (projectName, commentData) => {
   try {
-    console.log(store.getters.user.username)
-    const { data } = await axios.put(
-      `${API_URL}/suscripciones/suscripciones/comentarios/${projectName}`,
-      { username: store.getters.user.username, comentario: comment }
+    const formData = Utils.generateFormData(commentData)
+    const { data } = await axios.post(
+      `${API_URL}/suscripciones/suscripciones/crear/comentarios/${projectName}`,
+      formData
     )
     return {
       status: true,
-      data: { username: store.getters.user.username, comentario: comment }
+      data
+    }
+  } catch (e) {
+    return {
+      status: false,
+      data: 'Error'
+    }
+  }
+}
+
+Projects.deleteComment = async (projectName, commentId) => {
+  try {
+    const formData = Utils.generateFormData({ id: commentId })
+    const { data } = await axios.delete(
+      `${API_URL}/suscripciones/suscripciones/eliminar/comentarios/${projectName}`,
+      { data: formData }
+    )
+    return {
+      status: true,
+      data
     }
   } catch (e) {
     return {
@@ -208,13 +286,31 @@ Projects.getInterventorProjects = async () => {
   }
 }
 
+Projects.getInterventorUsers = async () => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/interventor/interventor/listarUsuarios`
+    )
+    return {
+      status: true,
+      data
+    }
+  } catch (e) {
+    return {
+      status: false,
+      data: 'Ha ocurrido un error. Intnéntelo de nuevo más tarde'
+    }
+  }
+}
+
 Projects.deleteProject = async projectName => {
+  const formData = new FormData()
+  formData.append('nombre', projectName)
   try {
     const { data } = await axios.delete(
       `${API_URL}/interventor/interventor/eliminarProyectoDefinitivamente/`,
-      { data: { nombre: projectName } }
+      { data: formData }
     )
-    console.log(data)
     return {
       status: true,
       data: 'Proyecto eliminado satisfactoriamente'
@@ -223,6 +319,57 @@ Projects.deleteProject = async projectName => {
     return {
       status: false,
       data: 'Ha ocurrido un error. Intnéntelo de nuevo más tarde'
+    }
+  }
+}
+
+Projects.getProjectViews = async projectName => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/estadistica/estadistica/visualizacion/ver/${projectName}`
+    )
+    return {
+      status: true,
+      data
+    }
+  } catch (e) {
+    return {
+      status: false,
+      data: 'Ha ocurrido un error.'
+    }
+  }
+}
+
+Projects.getProjectLikes = async () => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/estadistica/estadistica/likes/ver/${projectName}`
+    )
+    return {
+      status: true,
+      data
+    }
+  } catch (e) {
+    return {
+      status: false,
+      data: 'Ha ocurrido un error.'
+    }
+  }
+}
+
+Projects.getProjectDislikes = async () => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/estadistica/estadistica/dislikes/ver/${projectName}`
+    )
+    return {
+      status: true,
+      data
+    }
+  } catch (e) {
+    return {
+      status: false,
+      data: 'Ha ocurrido un error.'
     }
   }
 }

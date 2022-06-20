@@ -1,41 +1,5 @@
-button.create-project {
-  position: fixed;
-  right: 25px;
-  bottom: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  font-size: 32px;
-  &:hover {
-    span {
-      visibility: visible;
-      opacity: 1;
-      transform: scaleX(1);
-      background-color: $primary-hover;
-    }
-  }
-  span {
-    position: absolute;
-    right: calc(100% + 10px);
-    width: max-content;
-    padding: 5px 10px;
-    border-radius: $border-radius;
-    font-size: 18px;
-    background-color: $primary;
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transform-origin: calc(100% + 40px) center;
-    transform: scaleX(0.25);
-    transition: background-color 0.2s, transform 0.2s, opacity 0.2s, visibility 0.2s;
-  }
-}
 .projects-table {
-  margin: 20px;
-  padding: 10px;
+  padding: 20px;
   border-radius: $border-radius;
   .user-summary {
     display: flex;
@@ -55,12 +19,14 @@ button.create-project {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - $navbar-height - 120px);
       padding: 30px;
       img {
         width: 25%;
       }
       h3 {
-        font-weight: 500;
+        font-weight: 400;
       }
     }
     .project {
@@ -144,8 +110,8 @@ button.create-project {
       cursor: pointer;
       transition: background-color 0.2s, color 0.2s;
 
-      &:hover {
-        background-color: $background-dark-hover;
+      &:not(.disabled):hover {
+        background-color: rgba(black, 0.05);
       }
 
       &.selected {
@@ -161,6 +127,16 @@ button.create-project {
       &.filled {
         i {
           color: $primary;
+        }
+
+        &::after {
+          background-color: $primary !important;
+        }
+      }
+
+      &.disabled {
+        span {
+          color: $disabled;
         }
       }
 
@@ -205,7 +181,6 @@ button.create-project {
 
 @media (max-width: 992px) {
   .projects-table {
-    margin: 20px 0;
     padding: 0;
     .app-projects {
       padding: 0;

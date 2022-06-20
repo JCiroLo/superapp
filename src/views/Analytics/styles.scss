@@ -1,0 +1,114 @@
+.application-analytics {
+  padding: 15px 30px;
+  .projects-interactions {
+    display: flex;
+    flex-direction: column;
+
+    .project-interaction.title-row {
+      display: flex;
+      text-align: center;
+      font-weight: bold;
+
+      .project-preview {
+        flex-basis: 15%;
+        padding: 10px;
+      }
+      .project-name {
+        flex-basis: 35%;
+        padding: 10px;
+      }
+      .project-status,
+      .project-surveys,
+      .project-comments,
+      .project-likes,
+      .project-subscribers {
+        flex-basis: 10%;
+        padding: 10px;
+        text-align: center;
+      }
+    }
+
+    .project-interaction:not(.title-row) {
+      display: flex;
+      align-items: center;
+      transition: background-color 0.2s;
+      border-radius: $border-radius;
+
+      &.title-row {
+        margin-bottom: 15px;
+
+        .project-name {
+          text-align: center;
+        }
+      }
+
+      &:hover {
+        background-color: rgba(black, 0.025);
+      }
+
+      .project-preview {
+        flex-basis: 15%;
+        padding: 10px;
+        text-align: center;
+
+        img {
+          height: 50px;
+          object-fit: cover;
+          aspect-ratio: 16 / 9;
+          border-radius: $border-radius;
+        }
+      }
+      .project-name {
+        flex-basis: 35%;
+        padding: 10px;
+      }
+      .project-likes {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+
+        .likes-bar {
+          position: relative;
+          width: 100%;
+
+          .bar-content {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            height: 7px;
+            background-color: #41b883;
+            border-radius: 5px;
+          }
+          .bar-rail {
+            height: 7px;
+            background-color: #999;
+            border-radius: 5px;
+          }
+        }
+
+        .likes {
+          margin-left: 5px;
+          color: #41b883;
+        }
+
+        .dislikes {
+          margin-right: 5px;
+          color: #e46651;
+        }
+      }
+
+      .project-status,
+      .project-surveys,
+      .project-comments,
+      .project-likes,
+      .project-subscribers {
+        flex-basis: 10%;
+        padding: 10px;
+        text-align: center;
+      }
+    }
+  }
+}

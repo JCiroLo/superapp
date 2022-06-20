@@ -1,0 +1,70 @@
+$cols: (10, 20, 30, 50, 75, 90, 100);
+
+.users-table {
+  margin: 20px;
+  padding: 10px;
+
+  @each $col in $cols {
+    .flex-#{$col} {
+      flex-basis: #{$col} + "%";
+    }
+  }
+
+  .users-columns {
+    display: flex;
+    margin-bottom: 15px;
+    span {
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+
+  .users-rows {
+    .user {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      border-radius: $border-radius;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(black, 0.02);
+
+        .actions {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      .user-data {
+        display: flex;
+        width: 100%;
+        padding: 15px 0;
+        span {
+          text-align: center;
+        }
+      }
+
+      &.shadow {
+        box-shadow: none !important;
+        // background-color: rgba(black, 0.02);
+      }
+
+      .actions {
+        position: absolute;
+        right: 15px;
+        display: flex;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s, visibility 0.2s;
+        button {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}

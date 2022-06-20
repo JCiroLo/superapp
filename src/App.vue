@@ -1,12 +1,15 @@
 <template>
   <Loader :show="loading" />
   <Navbar />
-  <router-view />
+  <div class="super-app-city">
+    <router-view />
+  </div>
 </template>
 
 <script>
-import Navbar from './components/Navbar/index.vue'
+import axios from 'axios'
 import { mapMutations, mapGetters } from 'vuex'
+import Navbar from './components/Navbar/index.vue'
 import swal2Config from '../swal2.config.json'
 
 export default {
@@ -15,12 +18,15 @@ export default {
     Navbar
   },
   computed: {
-    ...mapGetters(['loading'])
+    ...mapGetters(['loading', 'user'])
   },
   methods: {
     ...mapMutations(['loginUser'])
   },
   beforeMount () {
+    if (!sessionStorage.userData) {
+      return
+    }
     try {
       const currentSession = JSON.parse(
         Buffer.from(
@@ -31,7 +37,6 @@ export default {
 
       if (new Date().getTime() >= currentSession.expirationTime) {
         sessionStorage.removeItem('userData')
-        console.log('Sesión expirada')
         this.$swal({
           ...swal2Config.error,
           title: 'Sesión expirada'
@@ -39,13 +44,22 @@ export default {
         return
       }
       this.loginUser(currentSession)
-    } catch (e) {}
+      console.log(currentSession)
+
+      axios.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${currentSession.access_token}`
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 </script>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap');
+
 @import './assets/scss/Buttons.scss';
 @import './assets/scss/Form.scss';
 @import '~@vueform/toggle/themes/default.css';
@@ -56,8 +70,29 @@ export default {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   color: $font-color;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: $border-radius;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: $border-radius;
+
+  &:hover {
+    background-color: #bbb;
+  }
+}
+
+.super-app-city {
+  margin-top: $navbar-height;
 }
 
 .toggle-green {
@@ -65,7 +100,7 @@ body {
   --toggle-border-on: #{$primary};
 
   &:focus {
-    box-shadow: none;
+    box-shadow: none !important;
   }
 }
 </style>

@@ -13,6 +13,18 @@
   }
 }
 
+.btn.btn-danger-outline {
+  background-color: transparent;
+  color: $danger;
+  border-radius: $border-radius;
+  border: 1px solid $danger;
+  transition: background-color 0.2s, color 0.2s;
+  &:hover {
+    background-color: $danger;
+    color: white;
+  }
+}
+
 .btn.btn-main-outline {
   background-color: transparent;
   color: $primary;
@@ -58,5 +70,41 @@
   &:hover {
     background-color: $primary;
     color: white;
+  }
+}
+
+.btn-float {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50% !important;
+  font-size: 32px;
+  &:hover {
+    span {
+      visibility: visible;
+      opacity: 1;
+      transform: scaleX(1);
+      background-color: $primary-hover;
+    }
+  }
+  span {
+    position: absolute;
+    right: calc(100% + 10px);
+    width: max-content;
+    padding: 5px 10px;
+    border-radius: $border-radius;
+    font-size: 18px;
+    background-color: $primary;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: calc(100% + 40px) center;
+    transform: scaleX(0.25);
+    transition: background-color 0.2s, transform 0.2s, opacity 0.2s, visibility 0.2s;
   }
 }

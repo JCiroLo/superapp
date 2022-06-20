@@ -1,7 +1,13 @@
-.delete-project-requests {
+.delete-requests {
   margin: 20px;
   padding: 10px;
-  .project {
+
+  h2{
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .request {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -14,8 +20,8 @@
       background-color: rgba(black, 0.02);
     }
 
-    .project-name {
-      h2 {
+    .request-name {
+      p {
         margin: 0;
         font-size: 20px;
       }

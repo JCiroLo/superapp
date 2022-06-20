@@ -2,6 +2,9 @@ import $User from '../../services/user'
 
 export default {
   name: 'Login',
+  title () {
+    return 'Iniciar sesión'
+  },
   data () {
     return {
       userData: {

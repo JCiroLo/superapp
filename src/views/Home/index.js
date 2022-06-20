@@ -1,5 +1,6 @@
 import { mapGetters, mapMutations } from 'vuex'
 import $Project from '../../services/project'
+import $Gamification from '../../services/project.gamification'
 import swal2Config from '../../../swal2.config.json'
 
 import ToggleButton from '@vueform/toggle'
@@ -13,6 +14,10 @@ export default {
   data () {
     return {
       projects: [],
+      sidebarItems: [
+        { title: 'Dashboard', icon: 'fa-th-large', route: 'Home' },
+        { title: 'Estadísitcas', icon: 'fa-analytics', route: 'Analytics' }
+      ],
       errorProjects: {
         status: false,
         message: ''
@@ -24,6 +29,7 @@ export default {
       modalVisibility: false,
       currentTab: 0,
       currentProject: $Project.getSchema(),
+      newGamification: $Gamification.getSchema(),
       action: null,
       projectToDelete: null, // ID
       thumbnail: null
@@ -57,6 +63,7 @@ export default {
       this.modalVisibility = !this.modalVisibility
       if (payload) {
         this.currentProject = payload
+        console.log(payload)
         return
       }
       if (action === 'close') {
@@ -64,17 +71,26 @@ export default {
       }
     },
     nextTab (action, goto = false) {
-      if (
-        (this.currentTab === 0 && action === -1) ||
-        (this.currentTab === 1 && action === 1)
-      ) {
-        return
-      }
       if (goto) {
         this.currentTab = action
         return
       }
-      this.currentTab += action
+
+      if (action === 'next') {
+        if (this.currentTab === 0 && !this.currentProject.gamificacion) {
+          this.currentTab += 2
+        }
+        if (this.currentTab !== 2) {
+          this.currentTab++
+        }
+      } else if (action === 'prev') {
+        if (this.currentTab === 2 && !this.currentProject.gamificacion) {
+          this.currentTab -= 2
+        }
+        if (this.currentTab !== 0) {
+          this.currentTab--
+        }
+      }
     },
     handleChangeImage (e) {
       const files = e.target.files || e.dataTransfer.files
@@ -125,8 +141,8 @@ export default {
         !this.currentProject.principalItos ||
         this.currentProject.cronograma.length === 0 ||
         this.currentProject.palabrasClave.length === 0 ||
-        !this.currentProject.localizacionLong ||
-        !this.currentProject.localizacionLat ||
+        !this.currentProject.localizacion[0] ||
+        !this.currentProject.localizacion[1] ||
         !this.currentProject.presupuesto ||
         !this.currentProject.fecha ||
         !this.thumbnail
@@ -139,48 +155,64 @@ export default {
         return
       }
 
-      this.currentProject.creador = this.user.username
-      this.currentProject.fecha = new Date(
-        this.currentProject.fecha
-      ).toLocaleDateString('en-CA')
+      if (this.action === 'create') {
+        const {
+          status: statusProject,
+          data: dataProject
+        } = await $Project.createProject(this.currentProject, this.user)
 
-      const {
-        localizacionLong,
-        localizacionLat,
-        ...newProject
-      } = this.currentProject
-      newProject.localizacion = [localizacionLong, localizacionLat]
+        if (!statusProject) {
+          this.$swal({
+            ...swal2Config.error,
+            title: dataProject
+          })
+          this.setLoading(false)
+          return
+        }
 
-      const {
-        status: statusProject,
-        data: dataProject
-      } = await $Project.createProject(newProject)
+        const {
+          status: statusThumnb,
+          data: dataThumb
+        } = await $Project.insertImage(
+          this.currentProject.nombre,
+          this.thumbnail
+        )
 
-      if (!statusProject) {
-        this.$swal({
-          ...swal2Config.error,
-          title: dataProject
-        })
-        this.setLoading(false)
-        return
-      }
+        if (!statusThumnb) {
+          this.$swal({
+            ...swal2Config.warning,
+            title: 'No se pudo subir la imagen.'
+          })
+        } else {
+          this.$swal({
+            ...swal2Config.success,
+            title: 'Proyecto creado exitosamente.'
+          })
+          this.projects.push(this.currentProject)
+          this.toggleModalVisibility('close')
+        }
+      } else if (this.action === 'edit') {
+        const {
+          status: statusProject,
+          data: dataProject
+        } = await $Project.updateProject(this.currentProject, this.user)
 
-      const {
-        status: statusThumnb,
-        data: dataThumb
-      } = await $Project.insertImage(newProject.nombre, this.thumbnail)
+        if (!statusProject) {
+          this.$swal({
+            ...swal2Config.error,
+            title: dataProject
+          })
+          this.setLoading(false)
+          return
+        }
 
-      if (!statusThumnb) {
-        this.$swal({
-          ...swal2Config.error,
-          title: 'No se pudo subir la imagen.'
-        })
-      } else {
         this.$swal({
           ...swal2Config.success,
-          title: 'Proyecto creado exitosamente.'
+          title: 'Proyecto actualizado exitosamente.'
         })
-        this.projects.push(newProject)
+
+        // ACTUALIZAR EL PROYECTO EN LA LISTA
+
         this.toggleModalVisibility('close')
       }
 

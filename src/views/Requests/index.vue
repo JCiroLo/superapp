@@ -1,14 +1,26 @@
 <template lang="pug"> 
 .container
-  .delete-project-requests
-    .project(v-for="(project, index) in requests" :key="index")
-      .project-name
-        h2 {{project.nombre}}
+  .delete-requests
+    h2 Peticiones de proyectos
+    .request(v-for="(request, index) in projectRequests" :key="index")
+      .request-name
+        p {{request.nombre}}
       .actions
-        button.btn.btn-icon(@click="confirmRequest(project)")
+        button.btn.btn-icon(@click="confirmRequest('project', request)")
           i.fas.fa-check
-        button.btn.btn-icon(@click="cancelRequest(project)")
+        button.btn.btn-icon(@click="cancelRequest('project', request)")
           i.fas.fa-times
+  .delete-requests
+    h2 Peticiones de usuarios
+    .request(v-for="(request, index) in userRequests" :key="index")
+      .request-name
+        p {{request.nombre}}
+      .actions
+        button.btn.btn-icon(@click="confirmRequest('user', request)")
+          i.fas.fa-check
+        button.btn.btn-icon(@click="cancelRequest('user', request)")
+          i.fas.fa-times
+  
 
 </template>
 

@@ -31,14 +31,21 @@ form.app-form {
       border-radius: $border-radius;
       outline: none;
       transition: border-color 0.2s;
+      &:not(.col-6) {
+        width: 100%;
+      }
       &:focus {
         border-color: $primary;
       }
     }
 
+    .toggle-container{
+      padding: 8px 0;
+    }
+
     .image-input {
       position: relative;
-      max-width: 33%;
+      max-width: 20%;
       aspect-ratio: 16 / 9;
       background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYMZt8DcAt94DmfTzFV7BGzcm3FLFr3XqnY4-0hKSC9h1n11jFKp-Nqo59cjKXLS8V8qY&usqp=CAU");
       background-repeat: no-repeat;

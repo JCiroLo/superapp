@@ -3,7 +3,8 @@ export default {
   props: {
     tags: Array,
     type: String,
-    placeholder: String
+    placeholder: String,
+    readOnly: Boolean
   },
   data () {
     return {

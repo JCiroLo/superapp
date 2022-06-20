@@ -1,5 +1,5 @@
 <template lang="pug">
-.tags-input
+.tags-input(:class="{'read-only': readOnly}")
   .tags
     .tag(v-for="(tag, index) in tags" :key="index")
       span {{tag}}
