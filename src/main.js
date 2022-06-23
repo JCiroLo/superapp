@@ -12,6 +12,7 @@ import Loader from './components/Loader/index.vue'
 import TagInput from './components/TagInput/index.vue'
 import ListInput from './components/ListInput/index.vue'
 import Sidebar from './components/Sidebar/index.vue'
+import Tabs from './components/Tabs/index.vue'
 
 import 'sweetalert2/dist/sweetalert2.min.css'
 
@@ -25,5 +26,6 @@ createApp(App)
   .component('TagInput', TagInput)
   .component('ListInput', ListInput)
   .component('Sidebar', Sidebar)
+  .component('Tabs', Tabs)
   .mixin(titleMixin)
   .mount('#app')

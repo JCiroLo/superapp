@@ -1,4 +1,5 @@
 import $Project from '../../services/project'
+import $Gamification from '../../services/project.gamification'
 import ToggleButton from '@vueform/toggle'
 import { mapMutations, mapGetters } from 'vuex'
 import swal2Config from '../../../swal2.config.json'
@@ -28,6 +29,7 @@ register('es_ES', localeFunc)
 const questionType = {
   1: 'rankingQuestions',
   2: 'hundredDollarsQuestions',
+  3: 'likertQuestions',
   6: 'kanoModelQuestions'
 }
 
@@ -48,26 +50,40 @@ export default {
         likes: 0,
         dislikes: 0
       },
+      currentProjectGamitfication: $Gamification.getSchema(),
       modal: {
         createQuestion: false,
         createComment: false
       },
       rankingQuestions: [],
       hundredDollarsQuestions: [],
+      likertQuestions: [],
       kanoModelQuestions: [],
       newQuestion: {
         tipoConsulta: 1,
         pregunta: null,
         informacion: null,
         opciones: [],
-        obligatorio: false
+        obligatorio: true
       },
       newComment: {},
       projectComments: []
     }
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    projectTabs () {
+      return [
+        { id: 'slot_0', name: 'Información del proyecto', disabled: false },
+        {
+          id: 'slot_1',
+          name: 'Gamificación',
+          disabled: !this.currentProject.gamificacion
+        },
+        { id: 'slot_2', name: 'Preguntas', disabled: false },
+        { id: 'slot_3', name: 'Comentarios', disabled: false }
+      ]
+    }
   },
   methods: {
     ...mapMutations(['setLoading']),
@@ -95,7 +111,7 @@ export default {
     },
     async addQuestion () {
       this.setLoading(true)
-      const { status } = await $Project.addQuestion(
+      const { status } = await $Project.insertQuestion(
         this.$route.params.projectName,
         this.newQuestion
       )
@@ -106,7 +122,7 @@ export default {
           pregunta: null,
           informacion: null,
           opciones: [],
-          obligatorio: false
+          obligatorio: true
         }
         this.$swal({
           ...swal2Config.success,
@@ -200,6 +216,12 @@ export default {
       const { data, status } = await $Project.getProject(projectName)
       if (status) {
         self.currentProject = data
+      }
+    })()
+    ;(async function () {
+      const { data, status } = await $Gamification.getGamification(projectName)
+      if (status && data) {
+        self.currentProjectGamitfication = data
       }
     })()
     ;(async function () {

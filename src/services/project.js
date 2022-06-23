@@ -25,7 +25,8 @@ Projects.getSchema = () => ({
   estadoProyecto: 1,
   proyectoDesarrollo: [1],
   creador: null,
-  gamificacion: false
+  gamificacion: false,
+  mensajeParticipacion: ''
 })
 
 Projects.getUserProjects = async () => {
@@ -202,7 +203,7 @@ Projects.getProjectQuestions = async projectName => {
   }
 }
 
-Projects.addQuestion = async (projectName, questionData) => {
+Projects.insertQuestion = async (projectName, questionData) => {
   try {
     const { data } = await axios.put(
       `${API_URL}/preguntasrespuestas/preguntasrespuestas/preguntas/crear/${projectName}`,

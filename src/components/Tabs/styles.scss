@@ -1,0 +1,44 @@
+.tabs-explorer {
+  display: flex;
+  flex-direction: column;
+
+  .tabs-header {
+    display: flex;
+    border-bottom: 1px solid $border;
+
+    .tab-button {
+      position: relative;
+      width: 0;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      padding: 12px 0;
+      border: none;
+      border-radius: $border-radius $border-radius 0 0;
+      font-size: 18px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: transparent;
+        transition: background-color 0.2s;
+      }
+
+      &.active {
+        color: $primary;
+
+        &::after {
+          background-color: $primary;
+        }
+      }
+    }
+  }
+
+  .tabs-body {
+    padding: 15px;
+  }
+}

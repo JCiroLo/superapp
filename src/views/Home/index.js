@@ -29,7 +29,7 @@ export default {
       modalVisibility: false,
       currentTab: 0,
       currentProject: $Project.getSchema(),
-      newGamification: $Gamification.getSchema(),
+      newGamification: $Gamification.getCreateSchema(),
       action: null,
       projectToDelete: null, // ID
       thumbnail: null
@@ -145,6 +145,7 @@ export default {
         !this.currentProject.localizacion[1] ||
         !this.currentProject.presupuesto ||
         !this.currentProject.fecha ||
+        !this.currentProject.mensajeParticipacion ||
         !this.thumbnail
       ) {
         this.$swal({
@@ -156,6 +157,8 @@ export default {
       }
 
       if (this.action === 'create') {
+        // PROJECT
+
         const {
           status: statusProject,
           data: dataProject
@@ -169,6 +172,28 @@ export default {
           this.setLoading(false)
           return
         }
+
+        // GAMIFICATION
+
+        if (this.currentProject.gamificacion) {
+          console.log(this.newGamification)
+
+          const {
+            status: statusGamification
+          } = await $Gamification.insertGamification(
+            this.currentProject.nombre,
+            this.newGamification
+          )
+
+          if (!statusGamification) {
+            this.$swal({
+              ...swal2Config.warning,
+              title: 'No se pudo crear la gamificación.'
+            })
+          }
+        }
+
+        // THUMBNAIL
 
         const {
           status: statusThumnb,
