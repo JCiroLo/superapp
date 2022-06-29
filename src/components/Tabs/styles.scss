@@ -2,16 +2,67 @@
   display: flex;
   flex-direction: column;
 
+  &.vertical {
+    flex-direction: row;
+
+    .tabs-header {
+      flex-basis: $sidebar-width;
+      display: flex;
+      flex-direction: column;
+      padding: 15px 0;
+      border: none;
+
+      .tab-button {
+        width: 100%;
+        flex-grow: 0;
+        font-size: 16px;
+        justify-content: start;
+        padding: 12px 24px;
+
+        &:hover {
+          background-color: $shadow;
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 4px;
+          height: 100%;
+          background-color: transparent;
+          transition: background-color 0.2s;
+        }
+
+        &.active {
+          color: $primary;
+          background-color: $shadow;
+
+          &::after {
+            background-color: $primary;
+          }
+        }
+      }
+    }
+
+    .tabs-body {
+      width: calc(100vw - $sidebar-width);
+      padding: 0;
+      border-left: 1px solid $border;
+      min-height: calc(100vh - $navbar-height);
+    }
+  }
+
   .tabs-header {
     display: flex;
     border-bottom: 1px solid $border;
 
     .tab-button {
       position: relative;
-      width: 0;
       flex-grow: 1;
       display: flex;
       justify-content: center;
+      width: 0;
       padding: 12px 0;
       border: none;
       border-radius: $border-radius $border-radius 0 0;

@@ -3,15 +3,10 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'Sidebar',
   computed: {
-    ...mapGetters(['isAuthenticated', 'hasRole', 'navbarState'])
+    ...mapGetters(['isAuthenticated', 'hasRole', 'navbarState', 'siderbarState'])
   },
   props: {
     items: Array
-  },
-  data () {
-    return {
-      show: true
-    }
   },
   methods: {
     ...mapMutations(['switchNavbar'])

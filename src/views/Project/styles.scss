@@ -10,6 +10,7 @@
   background-size: cover;
   background-attachment: scroll;
   z-index: 3;
+
   &::after {
     content: "";
     position: absolute;
@@ -19,6 +20,7 @@
     height: 100%;
     background-color: #00000066;
   }
+
   h1 {
     margin: 0 20px;
     z-index: 1;
@@ -36,6 +38,7 @@
     justify-content: center;
     padding: 10px 15px;
     color: white;
+
     .project-statistic {
       display: flex;
       align-items: center;
@@ -56,127 +59,142 @@
     }
   }
 }
+.project-section {
+  padding: 15px;
 
-.project-info {
-  display: flex;
-  flex-wrap: wrap;
-
-  .project-section {
-    flex: 0 0 25%;
-    margin-bottom: 15px;
-
-    h3 {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0;
-    }
-  }
-
-  .project-summary {
-    flex: 0 0 75%;
-    margin-bottom: 15px;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .project-keywords {
-    display: flex;
-    flex-direction: column;
-    .keyword {
-      display: flex;
-      align-items: center;
-      margin-right: 5px;
-      padding: 0 5px;
-
-      i {
-        margin-right: 5px;
-        font-size: 8px;
-      }
-
-      b {
-        margin-right: 5px;
-      }
-    }
-  }
-
-  .project-subsection {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 30px;
-
-    h2 {
-      font-size: 24px;
-      margin: 0;
-      font-weight: bold;
-    }
-
-    span {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 25px;
-      height: 25px;
-      margin: 0 15px 0 auto;
-      background-color: $primary;
-      color: white;
-      border-radius: 50%;
-      font-size: 12px;
-      font-weight: 600;
-    }
-  }
-
-  .project-comments {
-    width: 100%;
-    .project-comment {
-      position: relative;
-      margin: 10px 0;
-      padding: 5px 10px;
+  .project-info {
+    &.project-question {
+      
+      padding: 15px;
       border-radius: $border-radius;
-      cursor: pointer;
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: rgba(black, 0.075);
+        background-color: $shadow;
+      }
+
+      .question-actions {
+        
+      }
+    }
+
+    .project-subsection {
+      display: flex;
+      margin-bottom: 15px;
+
+      h3 {
+        flex: 0 0 25%;
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      p {
+        flex: 0 0 75%;
+        margin: 0;
+      }
+
+      .question-option {
+      }
+    }
+
+    .project-keywords {
+      display: flex;
+      flex-direction: column;
+      .keyword {
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
+        padding: 0 5px;
+
+        i {
+          margin-right: 5px;
+          font-size: 8px;
+        }
+
+        b {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .project-question-type {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+
+      h2 {
+        font-size: 24px;
+        margin: 0;
+        font-weight: bold;
+      }
+
+      span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 25px;
+        height: 25px;
+        margin-right: 15px;
+        background-color: $primary;
+        color: white;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: 600;
+      }
+    }
+
+    .project-comments {
+      width: 100%;
+
+      .project-comment {
+        position: relative;
+        margin: 10px 0;
+        padding: 5px 10px;
+        border-radius: $border-radius;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: $shadow;
+          .comment-actions {
+            opacity: 1;
+          }
+        }
+
+        .comment-header {
+          display: flex;
+          align-items: center;
+
+          .comment-user {
+            font-weight: bold;
+            text-transform: capitalize;
+          }
+
+          .comment-date {
+            margin-left: 5px;
+            font-weight: 300;
+            font-size: 12px;
+            color: #999;
+          }
+        }
         .comment-actions {
-          opacity: 1;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 10px;
+          display: flex;
+          align-items: center;
+          opacity: 0;
+          transition: opacity 0.2s;
+
+          button {
+            font-size: 18px !important;
+          }
         }
-      }
 
-      .comment-header {
-        display: flex;
-        align-items: center;
-
-        .comment-user {
-          font-weight: bold;
-          text-transform: capitalize;
+        .comment {
         }
-
-        .comment-date {
-          margin-left: 5px;
-          font-weight: 300;
-          font-size: 12px;
-          color: #999;
-        }
-      }
-      .comment-actions {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 10px;
-        display: flex;
-        align-items: center;
-        opacity: 0;
-        transition: opacity 0.2s;
-
-        button {
-          font-size: 18px !important;
-        }
-      }
-
-      .comment {
       }
     }
   }

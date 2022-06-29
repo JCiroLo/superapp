@@ -1,10 +1,13 @@
 <template lang="pug">
 header(:class="{collapsed: navbarState}")
   .main-navbar
+    .sidebar-toggler
+      button.btn.btn-text(@click="switchSidebar")
+        i.fas.fa-bars.fa-fw
     router-link.brand(to="/")
       img(:src="require('../../assets/img/icon.png')" alt="alt")
-      span Super App City 
-    .navbar-toggler
+      span Super App City
+    .main-navbar-toggler
       button.btn.btn-text(@click="switchNavbar")
         i.fas.fa-bars.fa-fw
     .navbar-actions

@@ -12,7 +12,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['switchNavbar']),
+    ...mapMutations(['switchNavbar', 'switchSidebar']),
     logoutUser () {
       this.$store.commit('logoutUser')
       sessionStorage.removeItem('userData')

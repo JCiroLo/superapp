@@ -1,246 +1,233 @@
 div
-  .project-image(:style="{backgroundImage: `url('${currentProjectImage}')`}" alt="alt")
-    h1 {{currentProject.nombre}}
-    .project-statistics
-      .project-statistic.project-views
-        i.fas.fa-eye
-        span {{currentProjectStatistics.views}}
-      .project-statistic.project-likes
-        i.fas.fa-thumbs-up
-        span {{currentProjectStatistics.likes}}
-      .project-statistic.project-dislikes
-        i.fas.fa-thumbs-down
-        span {{currentProjectStatistics.dislikes}}
-
-  Tabs(:tabs="projectTabs")
+  Tabs(:tabs="projectTabs" vertical)
     template(#slot_0)
-      .project-info
-        .project-section
-          h3 Fecha: 
-        .project-summary
-          p {{currentProject.fecha}}
-        .project-section
-          h3 Localización: 
-        .project-summary
-          p {{currentProject.localizacion[0]}} {{currentProject.localizacion[1]}}
-        .project-section
-          h3 Presupuesto: 
-        .project-summary
-          p {{filterToCurrency(currentProject.presupuesto)}}
-        .project-section
-          h3 Estado: 
-        .project-summary
-          ToggleButton.toggle-green(v-model="currentProject.enabled" @change="switchProjectStatus(currentProject)")
-        .project-section
-          h3 Descripción
-        .project-summary
-          p {{currentProject.descripcion}}
-        .project-section
-          h3 Resumen
-        .project-summary
-          p {{currentProject.resumen}}
-        .project-section
-          h3 Palabras clave
-        .project-summary
-          .project-keywords
-            .keyword(v-for="(keyword, index) in currentProject.palabrasClave" :key="index") 
-              i.fas.fa-circle
-              |  {{keyword}} 
-        .project-section
-          h3 Cronograma
-        .project-summary
-          .project-keywords
-            .keyword(v-for="(keyword, index) in currentProject.cronograma" :key="index") 
-              b {{index + 1}}. 
-              | {{keyword}} 
-        .project-section
-          h3 Objetivos
-        .project-summary
-          p {{currentProject.objetivos}}
-        .project-section
-          h3 Hitos
-        .project-summary
-          p {{currentProject.principalItos}}
+      .project-image(:style="{backgroundImage: `url('${currentProjectImage}')`}" alt="alt")
+        h1 {{currentProject.nombre}}
+        .project-statistics
+          .project-statistic.project-views
+            i.fas.fa-eye
+            span {{currentProjectStatistics.views}}
+          .project-statistic.project-likes
+            i.fas.fa-thumbs-up
+            span {{currentProjectStatistics.likes}}
+          .project-statistic.project-dislikes
+            i.fas.fa-thumbs-down
+            span {{currentProjectStatistics.dislikes}}
+      .project-section
+        .project-info
+          .project-subsection
+            h3 Estado: 
+            ToggleButton.toggle-green(v-model="currentProject.enabled" @change="switchProjectStatus(currentProject)")
+          .project-subsection
+            h3 Descripción
+            p {{currentProject.descripcion}}
+          .project-subsection
+            h3 Resumen
+            p {{currentProject.resumen}}
+          .project-subsection
+            h3 Palabras clave
+            .project-keywords
+              .keyword(v-for="(keyword, index) in currentProject.palabrasClave" :key="index") 
+                i.fas.fa-circle
+                |  {{keyword}} 
+          .project-subsection
+            h3 Cronograma
+            .project-keywords
+              .keyword(v-for="(keyword, index) in currentProject.cronograma" :key="index") 
+                b {{index + 1}}. 
+                | {{keyword}} 
+          .project-subsection
+            h3 Objetivos
+            p {{currentProject.objetivos}}
+          .project-subsection
+            h3 Hitos
+            p {{currentProject.principalItos}}
+          .project-subsection
+            h3 Fecha: 
+            p {{currentProject.fecha}}
+          .project-subsection
+            h3 Localización: 
+            p {{currentProject.localizacion[0]}} {{currentProject.localizacion[1]}}
+          .project-subsection
+            h3 Presupuesto: 
+            p {{filterToCurrency(currentProject.presupuesto)}}
 
     template(#slot_1)
-      .project-info
-        .project-section
-          h3 Título
-        .project-summary
-          p {{currentProjectGamitfication.titulo}}
-        .project-section
-          h3 Fecha de terminación
-        .project-summary
-          p {{currentProjectGamitfication.fechaTerminacion}}
-        .project-section
-          h3 Términos y condiciones
-        .project-summary
-          p {{currentProjectGamitfication.tyc}}
-        .project-section
-          h3 Mensaje de participación
-        .project-summary
-          p {{currentProjectGamitfication.mensajeParticipacion}}
-        .project-section
-          h3 Mensaje de ganador
-        .project-summary
-          p {{currentProjectGamitfication.mensajeGanador}}
-        .project-section
-          h3 Habilitado
-        .project-summary
-          ToggleButton.toggle-green(v-model="currentProjectGamitfication.habilitado")
-            template(#label="{ checked, classList }")
-              strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-        .project-section(v-if="currentProjectGamitfication.patrocinadores.length > 0")
-          h3 Patrocinadores
-        .project-summary(v-if="currentProjectGamitfication.patrocinadores.length > 0")
-          .project-keywords
-            .keyword(v-for="(item, index) in currentProjectGamitfication.patrocinadores" :key="index") 
-              i.fas.fa-circle
-              |  {{item}} 
-        .project-section(v-if="currentProjectGamitfication.premios.length > 0")
-          h3 Premios
-        .project-summary(v-if="currentProjectGamitfication.premios.length > 0")
-          .project-keywords
-            .keyword(v-for="(item, index) in currentProjectGamitfication.premios" :key="index") 
-              i.fas.fa-circle
-              |  {{item}} 
-        .project-section(v-if="currentProjectGamitfication.usuariosParticipantes.length > 0")
-          h3 Participantes
-        .project-summary(v-if="currentProjectGamitfication.usuariosParticipantes.length > 0")
-          .project-keywords
-            .keyword(v-for="(item, index) in currentProjectGamitfication.usuariosParticipantes" :key="index") 
-              i.fas.fa-circle
-              |  {{item}} 
-        .project-section(v-if="currentProjectGamitfication.usuariosGanadores.length > 0")
-          h3 Ganadores
-        .project-summary(v-if="currentProjectGamitfication.usuariosGanadores.length > 0")
-          .project-keywords
-            .keyword(v-for="(item, index) in currentProjectGamitfication.usuariosGanadores" :key="index") 
-              i.fas.fa-circle
-              |  {{item}} 
+      .project-section
+        .project-info
+          .project-subsection
+            h3 Título
+            p {{currentProjectGamitfication.titulo}}
+          .project-subsection
+            h3 Fecha de terminación
+            p {{currentProjectGamitfication.fechaTerminacion}}
+          .project-subsection
+            h3 Términos y condiciones
+            p {{currentProjectGamitfication.tyc}}
+          .project-subsection
+            h3 Mensaje de participación
+            p {{currentProjectGamitfication.mensajeParticipacion}}
+          .project-subsection
+            h3 Mensaje de ganador
+            p {{currentProjectGamitfication.mensajeGanador}}
+          .project-subsection
+            h3 Habilitado
+            ToggleButton.toggle-green(v-model="currentProjectGamitfication.habilitado")
+              template(#label="{ checked, classList }")
+                strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
+          .project-subsection(v-if="currentProjectGamitfication.patrocinadores.length > 0")
+            h3 Patrocinadores
+            .project-keywords
+              .keyword(v-for="(item, index) in currentProjectGamitfication.patrocinadores" :key="index") 
+                i.fas.fa-circle
+                |  {{item}} 
+          .project-subsection(v-if="currentProjectGamitfication.premios.length > 0")
+            h3 Premios
+            .project-keywords
+              .keyword(v-for="(item, index) in currentProjectGamitfication.premios" :key="index") 
+                i.fas.fa-circle
+                |  {{item}} 
+          .project-subsection(v-if="currentProjectGamitfication.usuariosParticipantes.length > 0")
+            h3 Participantes
+            .project-keywords
+              .keyword(v-for="(item, index) in currentProjectGamitfication.usuariosParticipantes" :key="index") 
+                i.fas.fa-circle
+                |  {{item}} 
+          .project-subsection(v-if="currentProjectGamitfication.usuariosGanadores.length > 0")
+            h3 Ganadores
+            .project-keywords
+              .keyword(v-for="(item, index) in currentProjectGamitfication.usuariosGanadores" :key="index") 
+                i.fas.fa-circle
+                |  {{item}} 
 
     template(#slot_2)
-      button.btn-float.btn.btn-main(@click="modal.createQuestion = !modal.createQuestion")
+      button.btn-float.btn.btn-main(@click="() => { actions.question = 'create'; modal.createQuestion = true; }")
         i.fal.fa-plus.fa-fw
         span Nueva pregunta
-      template(v-if="rankingQuestions.length > 0")
-        .project-info
-          .project-subsection
-            h2 Ranking
-            span {{rankingQuestions.length}}
-        .project-info(v-for="(question, index) in rankingQuestions" :key="index")
-          .project-section
-            h3 Pregunta
-          .project-summary
-            p {{question.pregunta}}
-          .project-section
-            h3 Información
-          .project-summary
-            p {{question.informacion}}
-          .project-section
-            h3 Opciones:
-          .project-summary
-            .question-option(v-for="(option, index) in question.opciones" :key="index")
-              li {{option}}
-          .project-section
-            h3  Obligatorio
-          .project-summary
-            ToggleButton.toggle-green(v-model="question.obligatorio")
-              template(#label="{ checked, classList }")
-                strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-      template(v-if="hundredDollarsQuestions.length > 0")
-        .project-info
-          .project-subsection
-            h2 $100
-            span {{hundredDollarsQuestions.length}}
-        .project-info(v-for="(question, index) in hundredDollarsQuestions" :key="index")
-          .project-section
-            h3 Pregunta
-          .project-summary
-            p {{question.pregunta}}
-          .project-section
-            h3 Información
-          .project-summary
-            p {{question.informacion}}
-          .project-section
-            h3 Opciones:
-          .project-summary
-            .question-option(v-for="(option, index) in question.opciones" :key="index")
-              li {{option}}
-          .project-section
-            h3  Obligatorio
-          .project-summary
-            ToggleButton.toggle-green(v-model="question.obligatorio")
-              template(#label="{ checked, classList }")
-                strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-      template(v-if="likertQuestions.length > 0")
-        .project-info
-          .project-subsection
-            h2 Likert
-            span {{likertQuestions.length}}
-        .project-info(v-for="(question, index) in likertQuestions" :key="index")
-          .project-section
-            h3 Pregunta
-          .project-summary
-            p {{question.pregunta}}
-          .project-section
-            h3 Información
-          .project-summary
-            p {{question.informacion}}
-          .project-section
-            h3 Opciones:
-          .project-summary
-            .question-option(v-for="(option, index) in question.opciones" :key="index")
-              li {{option}}
-          .project-section
-            h3  Obligatorio
-          .project-summary
-            ToggleButton.toggle-green(v-model="question.obligatorio")
-              template(#label="{ checked, classList }")
-                strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-      template(v-if="kanoModelQuestions.length > 0")
-        .project-info
-          .project-subsection
-            h2 Kano Model
-            span {{kanoModelQuestions.length}}
-        .project-info(v-for="(question, index) in kanoModelQuestions" :key="index")
-          .project-section
-            h3 Pregunta
-          .project-summary
-            p {{question.pregunta}}
-          .project-section
-            h3 Información
-          .project-summary
-            p {{question.informacion}}
-          .project-section
-            h3 Opciones:
-          .project-summary
-            .question-option(v-for="(option, index) in question.opciones" :key="index")
-              li {{option}}
-          .project-section
-            h3  Obligatorio
-          .project-summary
-            ToggleButton.toggle-green(v-model="question.obligatorio")
-              template(#label="{ checked, classList }")
-                strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
+      .project-section
+        template(v-if="rankingQuestions.length > 0")
+          .project-info
+            .project-question-type
+              span {{rankingQuestions.length}}
+              h2 Ranking
+          .project-info.project-question(v-for="(question, index) in rankingQuestions" :key="index")
+            .project-subsection
+              h3 Pregunta
+              p {{question.pregunta}}
+            .project-subsection
+              h3 Información
+              p {{question.informacion}}
+            .project-subsection
+              h3 Opciones:
+              .project-keywords
+                .keyword(v-for="(option, index) in question.opciones" :key="index") 
+                  i.fas.fa-circle
+                  |  {{option}} 
+            .project-subsection
+              h3  Obligatorio
+              ToggleButton.toggle-green(v-model="question.obligatorio")
+                template(#label="{ checked, classList }")
+                  strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
+            .question-actions
+              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
+              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
+        template(v-if="hundredDollarsQuestions.length > 0")
+          .project-info
+            .project-question-type
+              span {{hundredDollarsQuestions.length}}
+              h2 $100
+          .project-info.project-question(v-for="(question, index) in hundredDollarsQuestions" :key="index")
+            .project-subsection
+              h3 Pregunta
+              p {{question.pregunta}}
+            .project-subsection
+              h3 Información
+              p {{question.informacion}}
+            .project-subsection
+              h3 Opciones:
+              .project-keywords
+                .keyword(v-for="(option, index) in question.opciones" :key="index") 
+                  i.fas.fa-circle
+                  |  {{option}} 
+            .project-subsection
+              h3  Obligatorio
+              ToggleButton.toggle-green(v-model="question.obligatorio")
+                template(#label="{ checked, classList }")
+                  strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
+            .question-actions
+              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
+              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
+        template(v-if="likertQuestions.length > 0")
+          .project-info
+            .project-question-type
+              span {{likertQuestions.length}}
+              h2 Likert
+          .project-info.project-question(v-for="(question, index) in likertQuestions" :key="index")
+            .project-subsection
+              h3 Pregunta
+              p {{question.pregunta}}
+            .project-subsection
+              h3 Información
+              p {{question.informacion}}
+            .project-subsection
+              h3 Opciones:
+              .project-keywords
+                .keyword(v-for="(option, index) in question.opciones" :key="index") 
+                  i.fas.fa-circle
+                  |  {{option}} 
+            .project-subsection
+              h3  Obligatorio
+              ToggleButton.toggle-green(v-model="question.obligatorio")
+                template(#label="{ checked, classList }")
+                  strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
+            .question-actions
+              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
+              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
+        template(v-if="kanoModelQuestions.length > 0")
+          .project-info
+            .project-question-type
+              span {{kanoModelQuestions.length}}
+              h2 Kano Model
+          .project-info.project-question(v-for="(question, index) in kanoModelQuestions" :key="index")
+            .project-subsection
+              h3 Pregunta
+              p {{question.pregunta}}
+            .project-subsection
+              h3 Información
+              p {{question.informacion}}
+            .project-subsection
+              h3 Opciones:
+              .project-keywords
+                .keyword(v-for="(option, index) in question.opciones" :key="index") 
+                  i.fas.fa-circle
+                  |  {{option}} 
+            .project-subsection
+              h3  Obligatorio
+              ToggleButton.toggle-green(v-model="question.obligatorio")
+                template(#label="{ checked, classList }")
+                  strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
+            .question-actions
+              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
+              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
 
     template(#slot_3)
       button.btn-float.btn.btn-main(@click="modal.createComment = !modal.createComment")
         i.fal.fa-plus.fa-fw
         span Nuevo comentario
-      .project-info
-        .project-comments
-          .project-comment(v-for="(comment, index) in projectComments" :key="index")
-            .comment-header
-              .comment-user.anonymous {{!comment.anonimo ? comment.username : 'Anónimo'}}
-              .comment-date {{filterFormatDate(comment.fecha)}}
-            .comment {{comment.comentario}}
-            .comment-actions
-              button.btn.btn-icon(@click="deleteComment(comment)"): i.fas.fa-trash.fa-fw    
+      .project-section
+        .project-info
+          .project-comments
+            .project-comment(v-for="(comment, index) in projectComments" :key="index")
+              .comment-header
+                .comment-user.anonymous {{!comment.anonimo ? comment.username : 'Anónimo'}}
+                .comment-date {{filterFormatDate(comment.fecha)}}
+              .comment {{comment.comentario}}
+              .comment-actions
+                button.btn.btn-icon(@click="deleteComment(comment)"): i.fas.fa-trash.fa-fw    
 
   Modal(:show="modal.createQuestion" @closeModal="modal.createQuestion = false")
     template(#modal-header)
-      h4.m-0: b Nueva pregunta
+      h4.m-0: b {{actions.question === 'create' ? 'Nueva' : 'Actualizar'}} pregunta
     template(#modal-body)
       form.app-form(noValidate @submit.prevent="addQuestion")
         .form-field
@@ -275,7 +262,7 @@ div
     template(#modal-footer)
       .d-flex.justify-content-end
         button.btn.btn-main-outline(@click="modal.createQuestion = false") Cancelar
-        button.btn.btn-main.ms-3(@click="addQuestion") Crear
+        button.btn.btn-main.ms-3(@click="submitQuestion") {{ actions.question === 'create' ? 'Crear' : 'Actualizar'}}
 
   Modal(:show="modal.createComment" @closeModal="modal.createComment = false")
     template(#modal-header)

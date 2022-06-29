@@ -1,7 +1,8 @@
 export default {
   name: 'Tabs',
   props: {
-    tabs: Array
+    tabs: Array,
+    vertical: Boolean
   },
   data () {
     return {

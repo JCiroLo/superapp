@@ -1,5 +1,6 @@
 import $Project from '../../services/project'
 import $Gamification from '../../services/project.gamification'
+import $Question from '../../services/project.question'
 import ToggleButton from '@vueform/toggle'
 import { mapMutations, mapGetters } from 'vuex'
 import swal2Config from '../../../swal2.config.json'
@@ -67,7 +68,10 @@ export default {
         obligatorio: true
       },
       newComment: {},
-      projectComments: []
+      projectComments: [],
+      actions: {
+        question: '' // create or update
+      }
     }
   },
   computed: {
@@ -109,33 +113,59 @@ export default {
         })
       }
     },
-    async addQuestion () {
+    async submitQuestion () {
       this.setLoading(true)
-      const { status } = await $Project.insertQuestion(
-        this.$route.params.projectName,
-        this.newQuestion
-      )
-      if (status) {
-        this[questionType[this.newQuestion.tipoConsulta]].push(this.newQuestion)
-        this.newQuestion = {
-          tipoConsulta: 1,
-          pregunta: null,
-          informacion: null,
-          opciones: [],
-          obligatorio: true
+
+      if (this.actions.question === 'create') {
+        const { status } = await $Project.insertQuestion(
+          this.$route.params.projectName,
+          this.newQuestion
+        )
+        if (status) {
+          /* this[questionType[this.newQuestion.tipoConsulta]].push(
+            this.newQuestion
+          )
+          this.newQuestion = {
+            tipoConsulta: 1,
+            pregunta: null,
+            informacion: null,
+            opciones: [],
+            obligatorio: true
+          } */
+          this.$swal({
+            ...swal2Config.success,
+            title: 'Pregunta creada correctamente.'
+          })
+          this.modal.createQuestion = false
+        } else {
+          this.$swal({
+            ...swal2Config.error,
+            title:
+              'Hubo un error al crear pregunta. Inténtalo de nuevo más tarde.'
+          })
         }
-        this.$swal({
-          ...swal2Config.success,
-          title: 'Pregunta creada correctamente.'
-        })
-        this.modal.createQuestion = false
-      } else {
-        this.$swal({
-          ...swal2Config.error,
-          title:
-            'Hubo un error al crear pregunta. Inténtalo de nuevo más tarde.'
-        })
+      } else if (this.actions.question === 'update') {
+        const { status } = await $Question.updateQuestion(
+          this.$route.params.projectName,
+          {
+            ...this.newQuestion,
+            numeroOpciones: this.newQuestion.opciones.length
+          }
+        )
+        if (status) {
+          this.$swal({
+            ...swal2Config.success,
+            title: 'Pregunta actualizada correctamente.'
+          })
+        } else {
+          this.$swal({
+            ...swal2Config.error,
+            title:
+              'Hubo un error al actualizar la pregunta. Inténtalo de nuevo más tarde.'
+          })
+        }
       }
+
       this.setLoading(false)
     },
     async addComment () {
@@ -235,8 +265,9 @@ export default {
     })()
     ;(async function () {
       const { data, status } = await $Project.getProjectQuestions(projectName)
+      console.log(data)
       if (status) {
-        data.forEach(q => {
+        data.forEach((q, index) => {
           self[questionType[q.tipoConsulta]].push(q)
         })
       }
