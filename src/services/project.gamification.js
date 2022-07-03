@@ -31,14 +31,9 @@ export default {
   }),
 
   insertGamification: async (projectName, gamificationData) => {
-    console.log('---')
-    console.log(gamificationData)
-
     gamificationData.fechaTerminacion = new Date(
       gamificationData.fechaTerminacion
     ).toLocaleDateString()
-
-    console.log(gamificationData)
 
     const formData = $Utils.generateFormData(gamificationData)
 
@@ -53,11 +48,33 @@ export default {
     }
   },
 
+  updateGamification: async (projectName, gamificationData) => {
+    const formData = $Utils.generateFormData({
+      ...gamificationData,
+      fechaTerminacion: new Date(
+        gamificationData.fechaTerminacion
+      ).toLocaleDateString()
+    })
+
+    try {
+      const { data } = await axios.put(
+        `${API_URL}/gamificacion/gamificacion/proyectos/editar/${projectName}`,
+        formData
+      )
+      return { status: true, data }
+    } catch (e) {
+      return { status: false, data: 'Error' }
+    }
+  },
+
   getGamification: async projectName => {
     try {
       const { data } = await axios.get(
         `${API_URL}/gamificacion/gamificacion/proyectos/ver/${projectName}`
       )
+      if (!data) {
+        throw 'Error'
+      }
       return { status: true, data }
     } catch (e) {
       return { status: false, data: 'Error' }

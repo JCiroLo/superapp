@@ -4,7 +4,7 @@
 
   &.vertical {
     flex-direction: row;
-
+    
     .tabs-header {
       flex-basis: $sidebar-width;
       display: flex;
@@ -15,9 +15,8 @@
       .tab-button {
         width: 100%;
         flex-grow: 0;
-        font-size: 16px;
         justify-content: start;
-        padding: 12px 24px;
+        padding: 10px 20px;
 
         &:hover {
           background-color: $shadow;
@@ -42,6 +41,11 @@
             background-color: $primary;
           }
         }
+
+        i {
+          margin-right: 20px;
+          margin-top: 0;
+        }
       }
     }
 
@@ -62,11 +66,11 @@
       flex-grow: 1;
       display: flex;
       justify-content: center;
+      align-items: center;
       width: 0;
       padding: 12px 0;
       border: none;
       border-radius: $border-radius $border-radius 0 0;
-      font-size: 18px;
 
       &::after {
         content: "";
@@ -85,6 +89,16 @@
         &::after {
           background-color: $primary;
         }
+      }
+
+      span {
+        font-size: 16px;
+      }
+
+      i {
+        font-size: 18px;
+        margin-right: 10px;
+        margin-top: -3px;
       }
     }
   }

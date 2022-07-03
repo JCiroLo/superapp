@@ -81,7 +81,6 @@ User.getAllUsers = async () => {
 }
 
 User.updateUser = async (username, userData) => {
-  console.log(userData)
   try {
     const { data } = await axios.put(
       `${API_URL}/usuarios/users/editar/${username}`,

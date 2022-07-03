@@ -78,13 +78,8 @@ body {
   width: 10px;
 }
 
-::-webkit-scrollbar-track {
-  border-radius: $border-radius;
-}
-
 ::-webkit-scrollbar-thumb {
   background-color: #ccc;
-  border-radius: $border-radius;
 
   &:hover {
     background-color: #bbb;

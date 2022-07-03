@@ -40,7 +40,7 @@ Sidebar(:items="sidebarItems")
             .tab-content(v-if="currentTab === 0")
               form.app-form(noValidate @submit.prevent="nextTab('next')")
                 .form-field
-                  input(type="text" placeholder="Nombre" v-model="currentProject.nombre")
+                  input(type="text" placeholder="Nombre" v-model="currentProject.nombre" :disabled="action === 'edit'")
                 .form-field
                   textarea(placeholder="Resumen" v-model="currentProject.resumen")
                 .form-field
@@ -51,24 +51,14 @@ Sidebar(:items="sidebarItems")
                   textarea(placeholder="Hitos" v-model="currentProject.principalItos")
                 .form-field
                   textarea(placeholder="Mensaje de participación" v-model="currentProject.mensajeParticipacion")
-                // .form-field
-                  label Mensajes de notificación
-                  ListInput(
-                    type="text" 
-                    placeholder="Nuevo mensaje" 
-                    :list="currentProject.cronograma" 
-                    @addElement="handleAddCronograma"
-                    @removeElement="handleRemoveCronograma"
-                    ordered
-                  )
                 .form-field
                   label Cronograma
                   ListInput(
                     type="text" 
                     placeholder="Nuevo elemento" 
                     :list="currentProject.cronograma" 
-                    @addElement="handleAddCronograma"
-                    @removeElement="handleRemoveCronograma"
+                    @addElement="(element) => currentProject.cronograma.push(element)"
+                    @removeElement="(index) => currentProject.cronograma.splice(index, 1)"
                     ordered
                   )
                 .form-field
@@ -120,8 +110,8 @@ Sidebar(:items="sidebarItems")
                     type="text"
                     placeholder="Palabra clave"
                     :tags="currentProject.palabrasClave" 
-                    @addTag="handleAddPalabraClave"
-                    @removeTag="handleRemovePalabraClave"
+                    @addTag="(element)=> currentProject.palabrasClave.push(element)"
+                    @removeTag="(index) => currentProject.palabrasClave.splice(index, 1)"
                   )
                 .form-field
                   label Localización

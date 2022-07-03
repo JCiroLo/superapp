@@ -1,6 +1,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import $Project from '../../services/project'
 import $Gamification from '../../services/project.gamification'
+import $Validator from '../../validations'
 import swal2Config from '../../../swal2.config.json'
 
 import ToggleButton from '@vueform/toggle'
@@ -52,22 +53,55 @@ export default {
   },
   methods: {
     ...mapMutations(['setLoading']),
+    showAlert (status, title) {
+      // status: error | success | warning
+      this.$swal({
+        ...swal2Config[status],
+        title
+      })
+    },
     async deleteProject () {
       this.setLoading(true)
-      await $Project.requestDeleteProject(this.projectToDelete.nombre)
+      const { status } = await $Project.requestDeleteProject(
+        this.projectToDelete.nombre
+      )
       this.projectToDelete = null
+      status
+        ? this.showAlert(
+            'success',
+            'Se ha creado una petición para eliminar proyecto'
+          )
+        : this.showAlert(
+            'error',
+            'Error al intentar eliminar proyecto. Inténtelo de nuevo más tarde'
+          )
       this.setLoading(false)
     },
-    toggleModalVisibility (action, payload) {
+    async toggleModalVisibility (action, payload) {
       this.action = action
       this.modalVisibility = !this.modalVisibility
       if (payload) {
+        // LOAD GAMIFICATION
+        const { data, status } = await $Gamification.getGamification(
+          payload.nombre
+        )
+        if (!status) {
+          this.showAlert(
+            'warning',
+            'No se pudo cargar  la gamificación del proyecto'
+          )
+        } else {
+          this.newGamification = data
+        }
+
         this.currentProject = payload
-        console.log(payload)
         return
       }
       if (action === 'close') {
         this.currentProject = $Project.getSchema()
+        this.newGamification = $Gamification.getCreateSchema()
+        this.thumbnail = null
+        this.currentTab = 0
       }
     },
     nextTab (action, goto = false) {
@@ -102,18 +136,6 @@ export default {
     renderThumbnail () {
       return this.thumbnail ? URL.createObjectURL(this.thumbnail) : null
     },
-    handleAddCronograma (element) {
-      this.currentProject.cronograma.push(element)
-    },
-    handleRemoveCronograma (index) {
-      this.currentProject.cronograma.splice(index, 1)
-    },
-    handleAddPalabraClave (element) {
-      this.currentProject.palabrasClave.push(element)
-    },
-    handleRemovePalabraClave (index) {
-      this.currentProject.palabrasClave.splice(index, 1)
-    },
     async switchProjectStatus (project) {
       const { status, data } = await $Project.switchProjectStatus(
         project.nombre
@@ -132,33 +154,30 @@ export default {
     },
     async handleSubmitProjectForm () {
       this.setLoading(true)
+
       // Validations
-      if (
-        !this.currentProject.nombre ||
-        !this.currentProject.resumen ||
-        !this.currentProject.descripcion ||
-        !this.currentProject.objetivos ||
-        !this.currentProject.principalItos ||
-        this.currentProject.cronograma.length === 0 ||
-        this.currentProject.palabrasClave.length === 0 ||
-        !this.currentProject.localizacion[0] ||
-        !this.currentProject.localizacion[1] ||
-        !this.currentProject.presupuesto ||
-        !this.currentProject.fecha ||
-        !this.currentProject.mensajeParticipacion ||
-        !this.thumbnail
-      ) {
+      if (!$Validator.objectIsValid(this.currentProject, ['creador'])) {
         this.$swal({
           ...swal2Config.error,
-          title: 'No pueden haber campos vacíos.'
+          title: 'No pueden haber campos vacíos en el proyecto.'
         })
         this.setLoading(false)
         return
       }
 
+      if (this.currentProject.gamificacion) {
+        if (!$Validator.objectIsValid(this.newGamification, ['ganadores'])) {
+          this.$swal({
+            ...swal2Config.error,
+            title: 'No pueden haber campos vacíos en la gamificación.'
+          })
+          this.setLoading(false)
+          return
+        }
+      }
+
       if (this.action === 'create') {
         // PROJECT
-
         const {
           status: statusProject,
           data: dataProject
@@ -175,22 +194,18 @@ export default {
 
         // GAMIFICATION
 
-        if (this.currentProject.gamificacion) {
-          console.log(this.newGamification)
+        const {
+          status: statusGamification
+        } = await $Gamification.insertGamification(
+          this.currentProject.nombre,
+          this.newGamification
+        )
 
-          const {
-            status: statusGamification
-          } = await $Gamification.insertGamification(
-            this.currentProject.nombre,
-            this.newGamification
-          )
-
-          if (!statusGamification) {
-            this.$swal({
-              ...swal2Config.warning,
-              title: 'No se pudo crear la gamificación.'
-            })
-          }
+        if (!statusGamification) {
+          this.$swal({
+            ...swal2Config.warning,
+            title: 'No se pudo crear la gamificación.'
+          })
         }
 
         // THUMBNAIL
@@ -208,19 +223,25 @@ export default {
             ...swal2Config.warning,
             title: 'No se pudo subir la imagen.'
           })
-        } else {
-          this.$swal({
-            ...swal2Config.success,
-            title: 'Proyecto creado exitosamente.'
-          })
-          this.projects.push(this.currentProject)
-          this.toggleModalVisibility('close')
+          return
         }
+
+        this.$swal({
+          ...swal2Config.success,
+          title: 'Proyecto creado exitosamente.'
+        })
+
+        this.projects.push({
+          ...this.currentProject,
+          thumbnail: this.renderThumbnail(this.thumbnail)
+        })
+        this.toggleModalVisibility('close')
       } else if (this.action === 'edit') {
+        // PROJECT
         const {
           status: statusProject,
           data: dataProject
-        } = await $Project.updateProject(this.currentProject, this.user)
+        } = await $Project.updateProject(this.currentProject)
 
         if (!statusProject) {
           this.$swal({
@@ -229,6 +250,43 @@ export default {
           })
           this.setLoading(false)
           return
+        }
+
+        // GAMIFICATION
+
+        if (this.currentProject.gamificacion) {
+          const {
+            status: statusGamification
+          } = await $Gamification.updateGamification(
+            this.currentProject.nombre,
+            this.newGamification
+          )
+
+          if (!statusGamification) {
+            this.$swal({
+              ...swal2Config.warning,
+              title: 'No se pudo actualizar la gamificación.'
+            })
+          }
+        }
+
+        // THUMBNAIL
+
+        if (this.thumbnail) {
+          const {
+            status: statusThumnb,
+            data: dataThumb
+          } = await $Project.insertImage(
+            this.currentProject.nombre,
+            this.thumbnail
+          )
+
+          if (!statusThumnb) {
+            this.$swal({
+              ...swal2Config.warning,
+              title: 'No se pudo subir la imagen.'
+            })
+          }
         }
 
         this.$swal({

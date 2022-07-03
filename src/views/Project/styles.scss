@@ -62,9 +62,20 @@
 .project-section {
   padding: 15px;
 
+  .no-questions-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img {
+      width: 250px;
+    }
+    h3 {
+      font-size: 32px;
+    }
+  }
+
   .project-info {
     &.project-question {
-      
       padding: 15px;
       border-radius: $border-radius;
       transition: background-color 0.2s;
@@ -74,13 +85,13 @@
       }
 
       .question-actions {
-        
       }
     }
 
     .project-subsection {
       display: flex;
       margin-bottom: 15px;
+      // align-items: center;
 
       h3 {
         flex: 0 0 25%;

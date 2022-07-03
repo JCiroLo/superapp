@@ -16,7 +16,6 @@ export default {
         { title: 'Usuarios', icon: 'fa-th-large', route: 'Usuarios' }
       ],
       selectedUserRoles: [],
-      userToEdit: null,
       selectedUser: null,
       creatingUser: false,
       userToCreate: {
@@ -55,7 +54,8 @@ export default {
       this.setLoading(true)
 
       this.selectedUser = user
-      this.userToEdit = user.username
+
+      console.log(user)
 
       const { status, data } = await $User.getUserRoles(user.username)
 
@@ -64,6 +64,7 @@ export default {
           ...swal2Config.error,
           title: 'Hubo un problema al cargar los roles.'
         })
+
         this.selectedUserRoles = []
         this.setLoading(false)
         return
@@ -76,11 +77,13 @@ export default {
     async editUser () {
       this.setLoading(true)
 
-      console.log(this.userToEdit)
-
       const { status, data } = await $User.updateUser(
-        this.userToEdit,
-        this.selectedUser
+        this.selectedUser.username,
+        {
+          cellPhone: this.selectedUser.cellPhone,
+          email: this.selectedUser.email,
+          location: this.selectedUser.location
+        }
       )
 
       if (!status) {

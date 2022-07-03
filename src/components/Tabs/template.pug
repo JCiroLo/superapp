@@ -6,6 +6,7 @@
       :class="{ active: currentTab === tab.id }"
       @click="selectedTab = tab.id"
     )
+      i(:class="tab.icon")
       span {{tab.name}}
   .tabs-body
     .tab-content(v-for="tab in tabs" :key="tab.id")

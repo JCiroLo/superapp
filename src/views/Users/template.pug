@@ -1,0 +1,109 @@
+Sidebar(:items="sidebarItems")
+  .users-table
+    .users-columns
+      span.flex-20 Cédula
+      span.flex-30 Username
+      span.flex-20 Nombre
+      span.flex-30 Correo
+    .users-rows
+      .user(v-for="(user, index) in users" :class="{shadow: index % 2 == 1}" :key="index")
+        .user-data(@click="selectUser(user)")
+          span.flex-20 {{user.cedula}}
+          span.flex-30 {{user.username}}
+          span.flex-20 {{user.name}} {{user.lastName}}
+          span.flex-30 {{user.email}}
+
+  Modal(:show="selectedUser" @closeModal="selectedUser = null")
+    template(#modal-header)
+      h4.m-0: b Editar usuario
+    template(#modal-body)
+      form.app-form(noValidate @submit.prevent="editUser" )
+        .form-field
+          label Username
+          input(type="text" placeholder="Username" v-model="selectedUser.username" disabled)
+        .form-field
+          label Correo
+          input(type="text" placeholder="Correo" v-model="selectedUser.email")
+        .form-field
+          label Teléfono
+          input(type="text" placeholder="Correo" v-model="selectedUser.cellPhone")
+        .form-field
+          label Ubicación
+          .row.mx-0
+            .form-input.col-6.ps-0
+              input(type="number" placeholder="Longitud" v-model="selectedUser.location[0]")
+            .form-input.col-6.pe-0
+              input(type="number" placeholder="Latitud" v-model="selectedUser.location[1]")
+        hr
+        .form-field
+          label Roles
+          TagInput(
+            type="text"
+            placeholder="Role"
+            :tags="selectedUserRoles" 
+            readOnly
+          )
+
+    template(#modal-footer)
+      .d-flex
+        button.btn.btn-danger-outline.me-auto(@click="requestDeleteUser()") Eliminar usuario
+        button.btn.btn-main-outline(@click="selectedUser = null") Cancelar
+        button.btn.btn-main.ms-3(@click="editUser") Editar usuario
+
+  button.btn-float.btn.btn-main(@click="creatingUser = true")
+    i.fal.fa-plus.fa-fw
+    span Crear usuario
+
+  Modal(:show="creatingUser" @closeModal="creatingUser = false")
+    template(#modal-header)
+      h4.m-0: b Crear usuario
+    template(#modal-body)
+      form.app-form.row.flex-row(noValidate @submit.prevent="createUser" )
+        .form-field.col-6
+          label Username
+          input(type="text" placeholder="Username" v-model="userToCreate.username")
+        .form-field.col-6
+          label Correo
+          input(type="email" placeholder="Correo" v-model="userToCreate.email")
+        .form-field
+          label Contraseña
+          input(type="password" placeholder="Contraseña" v-model="userToCreate.contrasenia")
+        .form-field.col-6
+          label Teléfono
+          input(type="number" placeholder="Teléfono" v-model="userToCreate.cellPhone")
+        .form-field.col-6
+          label Cédula
+          input(type="text" placeholder="Cédula" v-model="userToCreate.cedula")
+        .form-field.col-6
+          label Nombre
+          input(type="text" placeholder="Nombre" v-model="userToCreate.name")
+        .form-field.col-6
+          label Apellido
+          input(type="text" placeholder="Apellido" v-model="userToCreate.lastName")
+        .form-field.col-4
+          label Fecha de nacimiento
+          input(type="text" placeholder="Fecha de nacimiento" v-model="userToCreate.birthDate")
+        .form-field.col-4
+          label Género
+          select(v-model="userToCreate.gender")
+            option(:value="-1" disabled) Seleccionar
+            option(:value="0") Hombre
+            option(:value="1") Mujer
+        .form-field.col-4.h-100
+          label.w-100 Cabeza de familia
+          ToggleButton.toggle-green(v-model="userToCreate.headFamily")
+        .form-field
+          label Teléfono
+          input(type="text" placeholder="Teléfono" v-model="userToCreate.phone")
+        .form-field
+          label Actividad económica
+          input(type="text" placeholder="Actividad económica" v-model="userToCreate.economicActivity")
+        .form-field.row
+          label.p-0 Ubicación
+          input.col-6(type="number" placeholder="Latitud" v-model="userToCreate.location[0]")
+          input.col-6(type="number" placeholder="Longitud" v-model="userToCreate.location[1]")
+
+    template(#modal-footer)
+      .d-flex.justify-content-end
+        button.btn.btn-main-outline(@click="creatingUser = false") Cancelar
+        button.btn.btn-main.ms-3(@click="createUser") Crear usuario

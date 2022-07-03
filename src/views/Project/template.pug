@@ -104,7 +104,11 @@ div
       button.btn-float.btn.btn-main(@click="() => { actions.question = 'create'; modal.createQuestion = true; }")
         i.fal.fa-plus.fa-fw
         span Nueva pregunta
-      .project-section
+      .project-section(v-if="rankingQuestions.length === 0 && hundredDollarsQuestions.length === 0 && kanoModelQuestions.length === 0 && likertQuestions.length === 0")
+        .no-questions-found
+          img(:src="require('../../assets/img/not-found.png')")
+          h3 Sin preguntas
+      .project-section(v-else)
         template(v-if="rankingQuestions.length > 0")
           .project-info
             .project-question-type
@@ -128,9 +132,15 @@ div
               ToggleButton.toggle-green(v-model="question.obligatorio")
                 template(#label="{ checked, classList }")
                   strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-            .question-actions
-              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
-              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
+            .project-subsection
+              h3 Acciones
+              .question-actions
+                button.btn.btn-text(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }")
+                  i.fas.fa-pencil.fa-fw
+                  span.ms-1 Editar
+                button.btn.btn-text(type='submit')
+                  i.fas.fa-trash.fa-fw
+                  span.ms-1 Eliminar
         template(v-if="hundredDollarsQuestions.length > 0")
           .project-info
             .project-question-type
@@ -154,9 +164,15 @@ div
               ToggleButton.toggle-green(v-model="question.obligatorio")
                 template(#label="{ checked, classList }")
                   strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-            .question-actions
-              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
-              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
+            .project-subsection
+              h3 Acciones
+              .question-actions
+                button.btn.btn-text(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }")
+                  i.fas.fa-pencil.fa-fw
+                  span.ms-1 Editar
+                button.btn.btn-text(type='submit')
+                  i.fas.fa-trash.fa-fw
+                  span.ms-1 Eliminar
         template(v-if="likertQuestions.length > 0")
           .project-info
             .project-question-type
@@ -180,9 +196,15 @@ div
               ToggleButton.toggle-green(v-model="question.obligatorio")
                 template(#label="{ checked, classList }")
                   strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-            .question-actions
-              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
-              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
+            .project-subsection
+              h3 Acciones
+              .question-actions
+                button.btn.btn-text(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }")
+                  i.fas.fa-pencil.fa-fw
+                  span.ms-1 Editar
+                button.btn.btn-text(type='submit')
+                  i.fas.fa-trash.fa-fw
+                  span.ms-1 Eliminar
         template(v-if="kanoModelQuestions.length > 0")
           .project-info
             .project-question-type
@@ -206,15 +228,25 @@ div
               ToggleButton.toggle-green(v-model="question.obligatorio")
                 template(#label="{ checked, classList }")
                   strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
-            .question-actions
-              button.btn.btn-icon(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }"): i.fas.fa-pencil.fa-fw
-              button.btn.btn-icon(type='submit'): i.fas.fa-trash.fa-fw
+            .project-subsection
+              h3 Acciones
+              .question-actions
+                button.btn.btn-text(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }")
+                  i.fas.fa-pencil.fa-fw
+                  span.ms-1 Editar
+                button.btn.btn-text(type='submit')
+                  i.fas.fa-trash.fa-fw
+                  span.ms-1 Eliminar
 
     template(#slot_3)
       button.btn-float.btn.btn-main(@click="modal.createComment = !modal.createComment")
         i.fal.fa-plus.fa-fw
         span Nuevo comentario
-      .project-section
+      .project-section(v-if="projectComments.length === 0")
+        .no-questions-found
+          img(:src="require('../../assets/img/not-found.png')")
+          h3 Sin comentarios
+      .project-section(v-else)
         .project-info
           .project-comments
             .project-comment(v-for="(comment, index) in projectComments" :key="index")
@@ -227,7 +259,7 @@ div
 
   Modal(:show="modal.createQuestion" @closeModal="modal.createQuestion = false")
     template(#modal-header)
-      h4.m-0: b {{actions.question === 'create' ? 'Nueva' : 'Actualizar'}} pregunta
+      h4.m-0: b {{actions.question === 'create' ? 'Nueva' : 'Editar'}} pregunta
     template(#modal-body)
       form.app-form(noValidate @submit.prevent="addQuestion")
         .form-field
@@ -262,7 +294,7 @@ div
     template(#modal-footer)
       .d-flex.justify-content-end
         button.btn.btn-main-outline(@click="modal.createQuestion = false") Cancelar
-        button.btn.btn-main.ms-3(@click="submitQuestion") {{ actions.question === 'create' ? 'Crear' : 'Actualizar'}}
+        button.btn.btn-main.ms-3(@click="submitQuestion") {{ actions.question === 'create' ? 'Crear' : 'Editar'}}
 
   Modal(:show="modal.createComment" @closeModal="modal.createComment = false")
     template(#modal-header)

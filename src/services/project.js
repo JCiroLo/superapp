@@ -96,13 +96,13 @@ Projects.createProject = async (projectData, userData) => {
   }
 }
 
-Projects.updateProject = async (projectData, userData) => {
+Projects.updateProject = async projectData => {
   // ELIMINAR PROPIEDADES EXTRA
   delete projectData.thumbnail
 
   try {
-    const { data } = await axios.post(
-      `${API_URL}/proyectos/proyectos/editarProyectos/${userData.username}/`,
+    const { data } = await axios.put(
+      `${API_URL}/proyectos/proyectos/editarProyectos/${projectData.nombre}/`,
       projectData
     )
     return { status: true, data }

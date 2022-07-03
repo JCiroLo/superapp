@@ -1,6 +1,7 @@
 import $Project from '../../services/project'
 import $Gamification from '../../services/project.gamification'
 import $Question from '../../services/project.question'
+import $Validator from '../../validations'
 import ToggleButton from '@vueform/toggle'
 import { mapMutations, mapGetters } from 'vuex'
 import swal2Config from '../../../swal2.config.json'
@@ -60,13 +61,7 @@ export default {
       hundredDollarsQuestions: [],
       likertQuestions: [],
       kanoModelQuestions: [],
-      newQuestion: {
-        tipoConsulta: 1,
-        pregunta: null,
-        informacion: null,
-        opciones: [],
-        obligatorio: true
-      },
+      newQuestion: $Question.getSchema(),
       newComment: {},
       projectComments: [],
       actions: {
@@ -78,14 +73,30 @@ export default {
     ...mapGetters(['user']),
     projectTabs () {
       return [
-        { id: 'slot_0', name: 'Información del proyecto', disabled: false },
+        {
+          id: 'slot_0',
+          name: 'Información del proyecto',
+          icon: 'fas fa-info fa-fw',
+          disabled: false
+        },
         {
           id: 'slot_1',
           name: 'Gamificación',
+          icon: 'fas fa-gift fa-fw',
           disabled: !this.currentProject.gamificacion
         },
-        { id: 'slot_2', name: 'Preguntas', disabled: false },
-        { id: 'slot_3', name: 'Comentarios', disabled: false }
+        {
+          id: 'slot_2',
+          name: 'Preguntas',
+          icon: 'fas fa-question fa-fw',
+          disabled: false
+        },
+        {
+          id: 'slot_3',
+          name: 'Comentarios',
+          icon: 'fas fa-comments fa-fw',
+          disabled: false
+        }
       ]
     }
   },
@@ -116,34 +127,38 @@ export default {
     async submitQuestion () {
       this.setLoading(true)
 
+      if (!$Validator.objectIsValid(this.newQuestion)) {
+        this.$swal({
+          ...swal2Config.error,
+          title: 'No pueden haber campos vacíos al crear la pregunta.'
+        })
+        this.setLoading(false)
+        return
+      }
+
       if (this.actions.question === 'create') {
         const { status } = await $Project.insertQuestion(
           this.$route.params.projectName,
           this.newQuestion
         )
-        if (status) {
-          /* this[questionType[this.newQuestion.tipoConsulta]].push(
-            this.newQuestion
-          )
-          this.newQuestion = {
-            tipoConsulta: 1,
-            pregunta: null,
-            informacion: null,
-            opciones: [],
-            obligatorio: true
-          } */
-          this.$swal({
-            ...swal2Config.success,
-            title: 'Pregunta creada correctamente.'
-          })
-          this.modal.createQuestion = false
-        } else {
+        if (!status) {
           this.$swal({
             ...swal2Config.error,
             title:
               'Hubo un error al crear pregunta. Inténtalo de nuevo más tarde.'
           })
+          return
         }
+
+        this[questionType[this.newQuestion.tipoConsulta]].push(this.newQuestion)
+        this.newQuestion = $Question.getSchema()
+
+        this.$swal({
+          ...swal2Config.success,
+          title: 'Pregunta creada correctamente.'
+        })
+
+        this.modal.createQuestion = false
       } else if (this.actions.question === 'update') {
         const { status } = await $Question.updateQuestion(
           this.$route.params.projectName,
