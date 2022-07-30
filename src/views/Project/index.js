@@ -1,57 +1,36 @@
+import { mapMutations, mapGetters } from 'vuex'
+
 import $Project from '../../services/project'
 import $Gamification from '../../services/project.gamification'
 import $Question from '../../services/project.question'
 import $Validator from '../../validations'
+import $Utils from '../../services/utils'
+
 import ToggleButton from '@vueform/toggle'
-import { mapMutations, mapGetters } from 'vuex'
+import ProjectQuestion from '../../components/ProjectQuestion/index.vue'
 import swal2Config from '../../../swal2.config.json'
-import { format, register } from 'timeago.js'
-
-const localeFunc = (number, index, totalSec) => {
-  return [
-    ['Justo ahora', 'right now'],
-    ['Hace %s segundos', 'En %s segundos'],
-    ['Hace 1 minuto', 'En 1 minuto'],
-    ['Hace %s minutos', 'En %s minutos'],
-    ['Hace 1 hora', 'En 1 hora'],
-    ['Hace %s horas', 'En %s horas'],
-    ['Hace 1 día', 'En 1 día'],
-    ['Hace %s días', 'En %s días'],
-    ['Hace 1 semana', 'En 1 semana'],
-    ['Hace %s semanas', 'En %s semanas'],
-    ['Hace 1 mes', 'En 1 mes'],
-    ['Hace %s meses', 'En %s meses'],
-    ['Hace 1 año', 'En 1 año'],
-    ['Hace %s años', 'En %s años']
-  ][index]
-}
-
-register('es_ES', localeFunc)
 
 const questionType = {
   1: 'rankingQuestions',
   2: 'hundredDollarsQuestions',
-  3: 'likertQuestions',
-  6: 'kanoModelQuestions'
+  6: 'kanoModelQuestions',
+  7: 'likertQuestions'
 }
 
 export default {
   name: 'Proyecto',
   title () {
-    return `Proyecto: ${this.$route.params.projectName}`
+    return `Proyecto: ${this.$route.params.projectId}`
   },
   components: {
-    ToggleButton
+    ToggleButton,
+    ProjectQuestion
   },
   data () {
     return {
       currentProject: $Project.getSchema(),
       currentProjectImage: null,
-      currentProjectStatistics: {
-        views: 0,
-        likes: 0,
-        dislikes: 0
-      },
+      currentProjectStatistics: {},
       currentProjectGamitfication: $Gamification.getSchema(),
       modal: {
         createQuestion: false,
@@ -62,7 +41,10 @@ export default {
       likertQuestions: [],
       kanoModelQuestions: [],
       newQuestion: $Question.getSchema(),
-      newComment: {},
+      newComment: {
+        comentario: null,
+        anonimo: false
+      },
       projectComments: [],
       actions: {
         question: '' // create or update
@@ -75,7 +57,7 @@ export default {
       return [
         {
           id: 'slot_0',
-          name: 'Información del proyecto',
+          name: 'Resumen',
           icon: 'fas fa-info fa-fw',
           disabled: false
         },
@@ -102,12 +84,6 @@ export default {
   },
   methods: {
     ...mapMutations(['setLoading']),
-    handleAddCronograma (element) {
-      this.newQuestion.opciones.push(element)
-    },
-    handleRemoveCronograma (index) {
-      this.newQuestion.opciones.splice(index, 1)
-    },
     async switchProjectStatus (project) {
       const { status, data } = await $Project.switchProjectStatus(
         project.nombre
@@ -124,7 +100,7 @@ export default {
         })
       }
     },
-    async submitQuestion () {
+    async addQuestion () {
       this.setLoading(true)
 
       if (!$Validator.objectIsValid(this.newQuestion)) {
@@ -137,16 +113,17 @@ export default {
       }
 
       if (this.actions.question === 'create') {
-        const { status } = await $Project.insertQuestion(
-          this.$route.params.projectName,
-          this.newQuestion
-        )
+        const { status } = await $Question.insertQuestion({
+          ...this.newQuestion,
+          idProyecto: this.$route.params.projectId
+        })
         if (!status) {
           this.$swal({
             ...swal2Config.error,
             title:
               'Hubo un error al crear pregunta. Inténtalo de nuevo más tarde.'
           })
+          this.setLoading(false)
           return
         }
 
@@ -191,18 +168,22 @@ export default {
         })
         return
       }
-      const commentData = {
-        ...this.newComment,
-        username: this.user.username,
-        anonimo: false,
-        fecha: new Date(),
-        tiempo: ''
-      }
       this.setLoading(true)
+
+      const newComment = {
+        idProyecto: this.$route.params.projectId,
+        username: this.user.username,
+        comentario: this.newComment.comentario,
+        fecha: new Date(),
+        tiempo: new Date(),
+        anonimo: this.newComment.anonimo
+      }
+
       const { status } = await $Project.insertComment(
-        this.$route.params.projectName,
-        commentData
+        this.$route.params.projectId,
+        newComment
       )
+
       if (!status) {
         this.$swal({
           ...swal2Config.error,
@@ -212,15 +193,17 @@ export default {
         this.setLoading(false)
         return
       }
-      this.projectComments.push(commentData)
+
+      this.projectComments.push(newComment)
       this.newComment = {}
+      this.modal.createComment = false
       this.setLoading(false)
     },
     async deleteComment (comment) {
       if (confirm('¿Estás seguro que quieres eliminar el comentario?')) {
         this.setLoading(true)
         const { status } = await $Project.deleteComment(
-          this.$route.params.projectName,
+          this.$route.params.projectId,
           comment.id
         )
         if (status) {
@@ -241,36 +224,37 @@ export default {
         this.setLoading(false)
       }
     },
-    filterToCurrency (value) {
+    formatCurrency (value) {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'COP'
-      }).format(value)
+      })
+        .format(value)
+        .replace('COP', '$')
     },
-    filterFormatDate (date) {
-      return format(new Date(date), 'es_ES')
-    }
+    formatSlashedDate: $Utils.formatSlashedDate,
+    formatStringDate: $Utils.formatStringDate
   },
   async beforeMount () {
     this.setLoading(true)
 
-    const projectName = this.$route.params.projectName
+    const projectId = this.$route.params.projectId
     const self = this
 
     ;(async function () {
-      const { data, status } = await $Project.getProject(projectName)
+      const { data, status } = await $Project.getProject(projectId)
       if (status) {
         self.currentProject = data
       }
     })()
     ;(async function () {
-      const { data, status } = await $Gamification.getGamification(projectName)
+      const { data, status } = await $Gamification.getGamification(projectId)
       if (status && data) {
         self.currentProjectGamitfication = data
       }
     })()
     ;(async function () {
-      const { data, status } = await $Project.getProjectImage(projectName)
+      const { data, status } = await $Project.getProjectImage(projectId)
       if (status) {
         self.currentProjectImage = `data:image/jpeg;base64,${data}`
       } else {
@@ -279,36 +263,26 @@ export default {
       }
     })()
     ;(async function () {
-      const { data, status } = await $Project.getProjectQuestions(projectName)
-      console.log(data)
+      const { data, status } = await $Project.getProjectQuestions(projectId, 1)
       if (status) {
         data.forEach((q, index) => {
-          self[questionType[q.tipoConsulta]].push(q)
+          if (Object.keys(questionType).includes(q.tipoConsulta.toString())) {
+            self[questionType[q.tipoConsulta]].push(q)
+          }
         })
       }
     })()
     ;(async function () {
-      const { data, status } = await $Project.getComments(projectName)
+      const { data, status } = await $Project.getComments(projectId)
       if (status) {
         self.projectComments = data
       }
     })()
     ;(async function () {
-      const { data, status } = await $Project.getProjectViews(projectName)
+      const { data, status } = await $Project.getProjectStatistics(projectId, 1)
       if (status) {
-        self.currentProjectStatistics.views = data
-      }
-    })()
-    ;(async function () {
-      const { data, status } = await $Project.getProjectLikes(projectName)
-      if (status) {
-        self.currentProjectStatistics.likes = data
-      }
-    })()
-    ;(async function () {
-      const { data, status } = await $Project.getProjectDislikes(projectName)
-      if (status) {
-        self.currentProjectStatistics.dislikes = data
+        console.log(data)
+        self.currentProjectStatistics = data
       }
     })()
 

@@ -14,7 +14,7 @@ form.app-form {
     input {
       padding: 8px 12px;
       border: 1px solid $border;
-      border-radius: $border-radius;
+      border-radius: $border-radius-fixed;
       outline: none;
       transition: border-color 0.2s;
       &:not(.col-6) {
@@ -28,7 +28,7 @@ form.app-form {
     select {
       padding: 8px 12px;
       border: 1px solid $border;
-      border-radius: $border-radius;
+      border-radius: $border-radius-fixed;
       outline: none;
       transition: border-color 0.2s;
       &:not(.col-6) {
@@ -51,17 +51,20 @@ form.app-form {
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center center;
-      border-radius: $border-radius;
+      border-radius: $border-radius-fixed;
       overflow: hidden;
+      border: 1px solid $border;
 
       .image-input-preview {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
+        height: 100%;
 
         img {
           width: 100%;
+          height: 100%;
           object-fit: cover;
         }
       }

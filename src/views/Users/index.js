@@ -55,8 +55,6 @@ export default {
 
       this.selectedUser = user
 
-      console.log(user)
-
       const { status, data } = await $User.getUserRoles(user.username)
 
       if (!status) {
@@ -102,17 +100,27 @@ export default {
     },
     async createUser () {
       this.setLoading(true)
-      console.log(this.userToCreate)
       const { status, data } = await $User.createUser(this.userToCreate)
-      console.log(data)
       this.setLoading(false)
+    },
+    async getThumbnail (username) {
+      const { status, data } = await $User.getUserImage(username)
+      if (status) {
+        return `data:image/jpeg;base64,${data}`
+      }
+      return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYMZt8DcAt94DmfTzFV7BGzcm3FLFr3XqnY4-0hKSC9h1n11jFKp-Nqo59cjKXLS8V8qY&usqp=CAU'
     }
   },
   async beforeMount () {
     this.setLoading(true)
     const { status, data } = await $User.getAllUsers()
     if (status) {
-      this.users = data
+      this.users = await Promise.all(
+        data.map(async u => ({
+          ...u,
+          profileImage: await this.getThumbnail(u.username)
+        }))
+      )
     }
     this.setLoading(false)
   }

@@ -1,20 +1,11 @@
 .projects-table {
-  padding: 20px;
+  padding: 15px;
   border-radius: $border-radius;
-  .user-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 30px;
-    h3.user-name {
-      margin: 0;
-      font-size: 22px;
-    }
-  }
   .app-projects {
     display: flex;
     flex-direction: column;
-    padding: 0 10px;
+    gap: 15px;
+    overflow-x: hidden;
     .error {
       display: flex;
       flex-direction: column;
@@ -33,16 +24,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 5px;
       cursor: pointer;
       border-radius: $border-radius;
-      transition: background-color 0.2s;
+      background-color: white;
+      transition: background-color 0.2s, opacity 0.2s, transform 0.2s;
+
       &:hover {
-        background-color: rgba(black, 0.02);
+        background-color: #f9f9f9;
         .project-actions {
           .project-hidden-actions {
             opacity: 1;
             visibility: visible;
+            transform: translateX(0);
           }
         }
       }
@@ -50,13 +43,13 @@
         flex-grow: 1;
         display: flex;
         align-items: center;
-        padding: 10px 0 10px 15px;
+        padding: 8px 0 8px 8px;
         .project-thumbnail {
           img {
-            height: 60px;
+            height: 70px;
             aspect-ratio: 16 / 9;
             object-fit: cover;
-            border-radius: $border-radius;
+            border-radius: $border-radius-fixed;
             margin-right: 15px;
           }
         }
@@ -81,7 +74,8 @@
           margin-right: 15px;
           opacity: 0;
           visibility: hidden;
-          transition: opacity 0.2s, visibility 0.2s;
+          transform: translateX(30px);
+          transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
         }
         button {
           padding: 5px;

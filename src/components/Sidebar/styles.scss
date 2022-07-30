@@ -16,12 +16,12 @@
     left: 0;
     display: flex;
     flex-direction: column;
+    gap: 10px;
     width: $sidebar-width;
     min-height: calc(100vh - $navbar-height);
-    padding: 15px 0;
-    background-color: rgba(white, 0.75);
-    backdrop-filter: blur(5px);
-    border-right: 1px solid $border;
+    padding: 15px;
+    background-color: white;
+    box-shadow: 0 5px 5px $card-shadow;
     transform: translateX(-100%);
     transition: transform 0.2s;
 
@@ -29,20 +29,18 @@
       display: flex;
       align-items: center;
       padding: 10px 20px;
+      border-radius: $border-radius-fixed;
       cursor: pointer;
       text-decoration: none;
       color: inherit;
       transition: background-color 0.2s;
-      border-left: 5px solid transparent;
-      transition: border-color 0.2s;
 
       &:hover {
-        background-color: rgba(black, 0.02);
+        background-color: #F0F2F5;
       }
-
+      
       &.router-link-exact-active {
-        border-color: $primary;
-        background-color: rgba(black, 0.02);
+        background-color: rgba($primary, 0.075);
         color: $primary;
       }
 

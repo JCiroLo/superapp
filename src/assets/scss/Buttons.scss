@@ -1,12 +1,13 @@
 .btn {
   outline: none;
   box-shadow: none !important;
+  padding: 8px 12px;
 }
 
 .btn.btn-main {
   background-color: $primary;
   color: white;
-  border-radius: $border-radius;
+  border-radius: $border-radius-fixed;
   transition: background-color 0.2s, color 0.2s;
   &:hover {
     background-color: $primary-hover;
@@ -16,7 +17,7 @@
 .btn.btn-danger-outline {
   background-color: transparent;
   color: $danger;
-  border-radius: $border-radius;
+  border-radius: $border-radius-fixed;
   border: 1px solid $danger;
   transition: background-color 0.2s, color 0.2s;
   &:hover {
@@ -28,7 +29,7 @@
 .btn.btn-main-outline {
   background-color: transparent;
   color: $primary;
-  border-radius: $border-radius;
+  border-radius: $border-radius-fixed;
   border: 1px solid $primary;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   &:hover {
@@ -41,7 +42,7 @@
 .btn.btn-text {
   background-color: transparent;
   color: $font-color;
-  border-radius: $border-radius;
+  border-radius: $border-radius-fixed;
   font-weight: bold;
   transition: color 0.2s;
   &:hover {
@@ -55,7 +56,7 @@
 .btn.btn-icon {
   background-color: transparent;
   color: $font-color;
-  border-radius: $border-radius;
+  border-radius: $border-radius-fixed;
   transition: color 0.2s;
   &:hover {
     color: $primary-hover;
@@ -65,7 +66,7 @@
 .btn.btn-main-inv {
   background-color: transparent;
   color: $primary;
-  border-radius: $border-radius;
+  border-radius: $border-radius-fixed;
   transition: background-color 0.2s, color 0.2s;
   &:hover {
     background-color: $primary;
@@ -98,7 +99,7 @@
     right: calc(100% + 10px);
     width: max-content;
     padding: 5px 10px;
-    border-radius: $border-radius;
+    border-radius: 50px;
     font-size: 18px;
     background-color: $primary;
     visibility: hidden;

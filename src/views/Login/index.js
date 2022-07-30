@@ -11,6 +11,7 @@ export default {
         username: null,
         password: null
       },
+      passwordState: 'password',
       error: {
         status: false,
         message: ''
@@ -19,9 +20,6 @@ export default {
     }
   },
   methods: {
-    handleInput (e) {
-      this.userData[e.target.id] = e.target.value
-    },
     async handleLogin () {
       this.loading = true
       const { status, data } = await $User.login(this.userData)
@@ -43,6 +41,13 @@ export default {
           status: false,
           message: ''
         }
+      }
+    },
+    switchPasswordState () {
+      if (this.passwordState === 'password') {
+        this.passwordState = 'text'
+      } else {
+        this.passwordState = 'password'
       }
     }
   },

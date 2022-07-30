@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   border: 1px solid $border;
-  border-radius: $border-radius;
+  border-radius: $border-radius-fixed;
   padding: 4px;
   &.read-only {
     padding: 0;
@@ -29,7 +29,7 @@
       padding: 0 2px 0 4px;
       margin: 2px 4px;
       border: 1px solid $border;
-      border-radius: $border-radius;
+      border-radius: $border-radius-fixed;
       transition: background-color 0.2s, color 0.2s;
       &:hover {
         background-color: $background-dark-hover;

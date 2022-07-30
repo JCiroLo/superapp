@@ -1,33 +1,47 @@
-.delete-requests {
-  margin: 20px;
-  padding: 10px;
+.app-requests {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 15px;
+  margin-top: calc($navbar-height + 15px);
+  padding: 15px;
+  border-radius: $border-radius;
+  background-color: white;
 
-  h2{
-    font-size: 24px;
+  h2 {
+    font-size: 22px;
     font-weight: bold;
   }
 
-  .request {
+  .project-requests,
+  .user-requests {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 15px;
-    border-radius: $border-radius;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    flex-direction: column;
+    gap: 5px;
 
-    &:hover {
-      background-color: rgba(black, 0.02);
-    }
+    .request {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      border-radius: $border-radius;
+      cursor: pointer;
+      transition: background-color 0.2s;
 
-    .request-name {
-      p {
-        margin: 0;
-        font-size: 20px;
+      &:hover {
+        background-color: rgba(black, 0.05);
       }
-    }
-    .actions {
-      button {
+
+      .request-name {
+        p {
+          margin: 0;
+          font-size: 20px;
+        }
+      }
+      .actions {
+        button {
+        }
       }
     }
   }

@@ -58,11 +58,12 @@ export default {
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap');
 
 @import './assets/scss/Buttons.scss';
 @import './assets/scss/Form.scss';
+@import './assets/scss/Card.scss';
 @import '~@vueform/toggle/themes/default.css';
+@import './assets/scss/Transitions.scss';
 
 * {
   margin: 0;
@@ -70,8 +71,9 @@ export default {
 }
 
 body {
-  font-family: 'Roboto Condensed', sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: $font-color;
+  background-color: #f0f2f5;
 }
 
 ::-webkit-scrollbar {

@@ -1,0 +1,9 @@
+.projects-enter-active,
+.projects-leave-active {
+  transition: all 0.5s ease;
+}
+.projects-enter-from,
+.projects-leave-to {
+  opacity: 0;
+  transform: translateX(60px);
+}

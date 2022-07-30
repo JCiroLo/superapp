@@ -7,9 +7,9 @@ Sidebar(:items="sidebarItems")
       .error
         img(:src="require('../../assets/img/not-found.png')")
         h3 {{errorProjects.message}}
-    .app-projects(v-else)
-      .project(v-for="(project, index) in projects" :key="index")
-        .project-summary(@click="$router.push({ name: 'Project', params: { projectName: project.nombre } })")
+    transition-group.app-projects(v-else name="projects" tag="div")
+      .project(v-for="(project, index) in filteredProjects" :key="index")
+        .project-summary(@click="$router.push({ name: 'Project', params: { projectId: project.codigoProyecto } })")
           .project-thumbnail
             img(:src="project.thumbnail" alt=" ")
           h2.project-title {{project.nombre}}
@@ -17,7 +17,7 @@ Sidebar(:items="sidebarItems")
           .project-hidden-actions
             button.btn.btn-icon(@click="toggleModalVisibility('edit', project)"): i.fas.fa-pencil.fa-fw
             button.btn.btn-icon(@click="(projectToDelete = project)"): i.fas.fa-trash-alt.fa-fw
-          ToggleButton.toggle-green(v-model="project.enabled" @change="switchProjectStatus(project)")
+          ToggleButton.toggle-green(v-model="project.activo" @change="switchProjectStatus(project)")
 
   Modal(:show="modalVisibility" @closeModal="toggleModalVisibility('close')" maxHeight)
     template(#modal-header)
@@ -40,17 +40,31 @@ Sidebar(:items="sidebarItems")
             .tab-content(v-if="currentTab === 0")
               form.app-form(noValidate @submit.prevent="nextTab('next')")
                 .form-field
-                  input(type="text" placeholder="Nombre" v-model="currentProject.nombre" :disabled="action === 'edit'")
+                  input(type="text" placeholder="Nombre" v-model="currentProject.nombre")
                 .form-field
                   textarea(placeholder="Resumen" v-model="currentProject.resumen")
                 .form-field
                   textarea(placeholder="Descripción" v-model="currentProject.descripcion")
                 .form-field
-                  textarea(placeholder="Objetivos" v-model="currentProject.objetivos")
+                  label Objetivos
+                  ListInput(
+                    type="text" 
+                    placeholder="Nuevo objetivo" 
+                    :list="currentProject.objetivos"
+                    @addElement="(element) => currentProject.objetivos.push(element)"
+                    @removeElement="(index) => currentProject.objetivos.splice(index, 1)" 
+                    ordered
+                  )
                 .form-field
-                  textarea(placeholder="Hitos" v-model="currentProject.principalItos")
-                .form-field
-                  textarea(placeholder="Mensaje de participación" v-model="currentProject.mensajeParticipacion")
+                  label Hitos
+                  ListInput(
+                    type="text" 
+                    placeholder="Nuevo objetivo" 
+                    :list="currentProject.hitos"
+                    @addElement="(element) => currentProject.hitos.push(element)"
+                    @removeElement="(index) => currentProject.hitos.splice(index, 1)" 
+                    ordered
+                  )
                 .form-field
                   label Cronograma
                   ListInput(
@@ -58,9 +72,16 @@ Sidebar(:items="sidebarItems")
                     placeholder="Nuevo elemento" 
                     :list="currentProject.cronograma" 
                     @addElement="(element) => currentProject.cronograma.push(element)"
-                    @removeElement="(index) => currentProject.cronograma.splice(index, 1)"
+                    @removeElement="(index) => currentProject.cronograma.splice(index, 1)" 
                     ordered
                   )
+                .form-field
+                  label Ubicación
+                  .row.mx-0
+                    .form-input.col-6.ps-0
+                      input(type="number" placeholder="Longitud" v-model="currentProject.ubicacion[0]")
+                    .form-input.col-6.pe-0
+                      input(type="number" placeholder="Latitud" v-model="currentProject.ubicacion[1]")
                 .form-field
                   label.w-100 Con gamificación
                   ToggleButton.toggle-green(v-model="currentProject.gamificacion")
@@ -79,6 +100,8 @@ Sidebar(:items="sidebarItems")
                   input(type="text" placeholder="Mensaje de participación" v-model="newGamification.mensajeParticipacion")
                 .form-field
                   input(type="text" placeholder="Mensaje de ganador" v-model="newGamification.mensajeGanador")
+                .form-field
+                  input(type="number" placeholder="Número de ganadores" v-model="newGamification.ganadores")
                 .form-field
                   label Patrocinadores
                   ListInput(
@@ -111,21 +134,16 @@ Sidebar(:items="sidebarItems")
                     placeholder="Palabra clave"
                     :tags="currentProject.palabrasClave" 
                     @addTag="(element)=> currentProject.palabrasClave.push(element)"
-                    @removeTag="(index) => currentProject.palabrasClave.splice(index, 1)"
+                    @removeTag="(index) => currentProject.palabrasClave.splice(index, 1)" 
                   )
                 .form-field
-                  label Localización
-                  .row.mx-0
-                    .form-input.col-6.ps-0
-                      input(type="number" placeholder="Longitud" v-model="currentProject.localizacion[0]")
-                    .form-input.col-6.pe-0
-                      input(type="number" placeholder="Latitud" v-model="currentProject.localizacion[1]")
+                  textarea(placeholder="Mensaje de participación" v-model="currentProject.mensajeParticipacion")
                 .form-field
                   label Presupuesto
                   input(type="number" placeholder="Presupuesto" v-model="currentProject.presupuesto")
                 .form-field
                   label Fecha
-                  input(type="date" v-model="currentProject.fecha")
+                  input(type="date" v-model="currentProject.fechaLanzamiento")
                 .form-field
                   label Miniatura
                   .image-input

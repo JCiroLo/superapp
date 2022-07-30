@@ -1,20 +1,23 @@
 <template lang="pug"> 
-.container
-  .delete-requests
-    h2 Peticiones de proyectos
+.app-requests
+  h2 Peticiones
+  .project-requests
     .request(v-for="(request, index) in projectRequests" :key="index")
-      .request-name
-        p {{request.nombre}}
+      .request-name(@click="$router.push({ name: 'Project', params: { projectId: request.idProyecto } })")
+        p 
+          | Eliminar el proyecto con código 
+          b {{request.idProyecto}}
       .actions
         button.btn.btn-icon(@click="confirmRequest('project', request)")
           i.fas.fa-check
         button.btn.btn-icon(@click="cancelRequest('project', request)")
           i.fas.fa-times
-  .delete-requests
-    h2 Peticiones de usuarios
+  .user-requests
     .request(v-for="(request, index) in userRequests" :key="index")
       .request-name
-        p {{request.nombre}}
+        p 
+          | Eliminar el usuario 
+          b {{request.username}}
       .actions
         button.btn.btn-icon(@click="confirmRequest('user', request)")
           i.fas.fa-check

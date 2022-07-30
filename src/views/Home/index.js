@@ -36,20 +36,16 @@ export default {
       thumbnail: null
     }
   },
-  filters: {
-    toCurrency (value) {
-      if (typeof value !== 'number') {
-        return value
-      }
-      const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      })
-      return formatter.format(value)
-    }
-  },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'getSearch']),
+    filteredProjects () {
+      if (this.getSearch) {
+        return this.projects.filter(p =>
+          p.nombre.toLowerCase().includes(this.getSearch.toLowerCase())
+        )
+      }
+      return this.projects
+    }
   },
   methods: {
     ...mapMutations(['setLoading']),
@@ -63,7 +59,7 @@ export default {
     async deleteProject () {
       this.setLoading(true)
       const { status } = await $Project.requestDeleteProject(
-        this.projectToDelete.nombre
+        this.projectToDelete.codigoProyecto
       )
       this.projectToDelete = null
       status
@@ -83,7 +79,7 @@ export default {
       if (payload) {
         // LOAD GAMIFICATION
         const { data, status } = await $Gamification.getGamification(
-          payload.nombre
+          payload.codigoProyecto
         )
         if (!status) {
           this.showAlert(
@@ -138,7 +134,7 @@ export default {
     },
     async switchProjectStatus (project) {
       const { status, data } = await $Project.switchProjectStatus(
-        project.nombre
+        project.codigoProyecto
       )
       if (status) {
         this.$swal({
@@ -154,6 +150,7 @@ export default {
     },
     async handleSubmitProjectForm () {
       this.setLoading(true)
+      const mistakes = []
 
       // Validations
       if (!$Validator.objectIsValid(this.currentProject, ['creador'])) {
@@ -166,7 +163,12 @@ export default {
       }
 
       if (this.currentProject.gamificacion) {
-        if (!$Validator.objectIsValid(this.newGamification, ['ganadores'])) {
+        if (
+          !$Validator.objectIsValid(this.newGamification, [
+            'usuariosGanadores',
+            'usuariosParticipantes'
+          ])
+        ) {
           this.$swal({
             ...swal2Config.error,
             title: 'No pueden haber campos vacíos en la gamificación.'
@@ -180,13 +182,13 @@ export default {
         // PROJECT
         const {
           status: statusProject,
-          data: dataProject
+          data: projectId
         } = await $Project.createProject(this.currentProject, this.user)
 
         if (!statusProject) {
           this.$swal({
             ...swal2Config.error,
-            title: dataProject
+            title: 'No se pudo crear el proyecto'
           })
           this.setLoading(false)
           return
@@ -196,16 +198,13 @@ export default {
 
         const {
           status: statusGamification
-        } = await $Gamification.insertGamification(
-          this.currentProject.nombre,
+        } = await $Gamification.updateGamification(
+          projectId,
           this.newGamification
         )
 
         if (!statusGamification) {
-          this.$swal({
-            ...swal2Config.warning,
-            title: 'No se pudo crear la gamificación.'
-          })
+          mistakes.push('No se pudo crear la gamificación.')
         }
 
         // THUMBNAIL
@@ -213,16 +212,19 @@ export default {
         const {
           status: statusThumnb,
           data: dataThumb
-        } = await $Project.insertImage(
-          this.currentProject.nombre,
-          this.thumbnail
-        )
+        } = await $Project.insertImage(projectId, this.thumbnail)
 
         if (!statusThumnb) {
+          mistakes.push('No se pudo subir la imagen.')
+        }
+
+        if (mistakes.length > 0) {
           this.$swal({
             ...swal2Config.warning,
-            title: 'No se pudo subir la imagen.'
+            title: mistakes.join(' \n')
           })
+          this.setLoading(false)
+          this.toggleModalVisibility('close')
           return
         }
 
@@ -233,6 +235,7 @@ export default {
 
         this.projects.push({
           ...this.currentProject,
+          codigoProyecto: projectId,
           thumbnail: this.renderThumbnail(this.thumbnail)
         })
         this.toggleModalVisibility('close')
@@ -258,7 +261,7 @@ export default {
           const {
             status: statusGamification
           } = await $Gamification.updateGamification(
-            this.currentProject.nombre,
+            this.currentProject.codigoProyecto,
             this.newGamification
           )
 
@@ -312,7 +315,9 @@ export default {
   async beforeMount () {
     this.setLoading(true)
 
-    const { status, data } = await $Project.getUserProjects()
+    const { status, data } = await $Project.getProjects()
+
+    console.log(data)
 
     if (status) {
       if (data.length === 0) {
@@ -323,7 +328,7 @@ export default {
       } else {
         this.projects = await Promise.all(
           data.map(async p => {
-            const img = await this.getThumbnail(p.nombre)
+            const img = await this.getThumbnail(p.codigoProyecto)
             return { ...p, thumbnail: img }
           })
         )

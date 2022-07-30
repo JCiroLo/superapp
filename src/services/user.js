@@ -9,28 +9,6 @@ const API_URL = process.env.VUE_APP_API_URL
 
 const User = {}
 
-User.getUserByUsername = async username => {
-  try {
-    const { data } = await axios.get(
-      `${API_URL}/usuarios/users/findUsername/${username}`
-    )
-    return { status: true, data }
-  } catch (e) {
-    return { status: false, data: 'Error' }
-  }
-}
-
-User.getUserRoles = async username => {
-  try {
-    const { data } = await axios.get(
-      `${API_URL}/usuarios/users/verRoleUsuario/${username}`
-    )
-    return { status: true, data }
-  } catch (e) {
-    return { status: false, data: 'Error' }
-  }
-}
-
 User.login = async userData => {
   try {
     const { data: auth } = await axios.post(
@@ -70,10 +48,42 @@ User.login = async userData => {
   }
 }
 
+User.getUserByUsername = async username => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/usuarios/users/findUsername/${username}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.getUserRoles = async username => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/usuarios/users/verRoleUsuario/${username}`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
+User.getUserImage = async username => {
+  try {
+    const { data } = await axios.get(
+      `${API_URL}/usuarios/users/file/binary/${username}/`
+    )
+    return { status: true, data }
+  } catch (e) {
+    return { status: false, data: 'Error' }
+  }
+}
+
 User.getAllUsers = async () => {
   try {
     const { data } = await axios.get(`${API_URL}/usuarios/users/listar/`)
-    console.log(data)
     return { status: true, data }
   } catch (e) {
     return { status: false, data: 'Error' }

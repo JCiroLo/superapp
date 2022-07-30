@@ -1,0 +1,12 @@
+.custom-card {
+  background-color: white;
+  border-radius: $border-radius;
+  box-shadow: 0 5px 10px $card-shadow;
+
+  &-image {
+  }
+
+  &-body {
+    padding: 15px;
+  }
+}

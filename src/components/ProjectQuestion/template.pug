@@ -1,0 +1,22 @@
+Accordion.project-question
+  template(#accordion-toggler)
+    .project-question-title {{question.numeroPregunta}}. {{question.pregunta}}
+  template(#accordion-content)
+    h3 Información
+    p {{question.informacion}}
+    h3 Opciones:
+    .project-question-list
+      .item(v-for="(item, index) in question.opciones" :key="index") 
+        i.fas.fa-circle
+        |  {{item}} 
+    h3  Obligatorio
+    ToggleButton.toggle-green(v-model="question.obligatorio")
+      template(#label="{ checked, classList }")
+        strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
+    .project-question-actions
+      button.btn.btn-text(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }")
+        i.fas.fa-pencil.fa-fw
+        span.ms-1 Editar
+      button.btn.btn-text(type='submit')
+        i.fas.fa-trash.fa-fw
+        span.ms-1 Eliminar

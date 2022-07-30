@@ -5,7 +5,8 @@ const store = createStore({
     user: null,
     loading: false,
     navbar: false,
-    sidebar: window.matchMedia("(min-width: 992px)").matches
+    sidebar: window.matchMedia('(min-width: 992px)').matches,
+    search: ''
   },
   getters: {
     isAuthenticated: state => (state.user ? true : false),
@@ -13,23 +14,26 @@ const store = createStore({
     loading: state => state.loading,
     hasRole: state => payload => state.user.userRoles.find(e => e === payload),
     navbarState: state => state.navbar,
-    siderbarState: state => state.sidebar
+    siderbarState: state => state.sidebar,
+    getSearch: state => state.search
   },
   mutations: {
     loginUser: (state, payload) => {
       state.user = payload
+      state.navbar = true
     },
     logoutUser: state => {
       state.user = null
+      state.navbar = false
     },
     setLoading: (state, payload) => {
       state.loading = payload
     },
-    switchNavbar: state => {
-      state.navbar = !state.navbar
-    },
     switchSidebar: state => {
       state.sidebar = !state.sidebar
+    },
+    setSearch: (state, payload) => {
+      state.search = payload
     }
   }
 })

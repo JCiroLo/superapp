@@ -5,15 +5,15 @@ const API_URL = process.env.VUE_APP_API_URL
 
 export default {
   getCreateSchema: () => ({
-    titulo: '',
-    tyc: '',
+    titulo: null,
+    tyc: null,
     fechaTerminacion: null,
     habilitado: true,
-    mensajeParticipacion: '',
-    mensajeGanador: '',
+    mensajeParticipacion: null,
+    mensajeGanador: null,
     premios: [],
     patrocinadores: [],
-    ganadores: []
+    ganadores: null
   }),
 
   getSchema: () => ({
@@ -30,35 +30,12 @@ export default {
     mensajeGanador: ''
   }),
 
-  insertGamification: async (projectName, gamificationData) => {
-    gamificationData.fechaTerminacion = new Date(
-      gamificationData.fechaTerminacion
-    ).toLocaleDateString()
-
+  updateGamification: async (projectId, gamificationData) => {
     const formData = $Utils.generateFormData(gamificationData)
 
     try {
-      const { data } = await axios.post(
-        `${API_URL}/gamificacion/gamificacion/proyectos/crear/${projectName}`,
-        formData
-      )
-      return { status: true, data }
-    } catch (e) {
-      return { status: false, data: 'Error' }
-    }
-  },
-
-  updateGamification: async (projectName, gamificationData) => {
-    const formData = $Utils.generateFormData({
-      ...gamificationData,
-      fechaTerminacion: new Date(
-        gamificationData.fechaTerminacion
-      ).toLocaleDateString()
-    })
-
-    try {
       const { data } = await axios.put(
-        `${API_URL}/gamificacion/gamificacion/proyectos/editar/${projectName}`,
+        `${API_URL}/gamificacion/gamificacion/proyectos/editar/${projectId}`,
         formData
       )
       return { status: true, data }
@@ -67,10 +44,10 @@ export default {
     }
   },
 
-  getGamification: async projectName => {
+  getGamification: async projectId => {
     try {
       const { data } = await axios.get(
-        `${API_URL}/gamificacion/gamificacion/proyectos/ver/${projectName}`
+        `${API_URL}/gamificacion/gamificacion/proyectos/ver/${projectId}`
       )
       if (!data) {
         throw 'Error'

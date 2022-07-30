@@ -1,15 +1,16 @@
 <template lang="pug">
-header(:class="{collapsed: navbarState}")
+header(:class="{hide: !navbarState}")
   .main-navbar
-    .sidebar-toggler
+    .sidebar-toggler(v-if="$route.name !== 'Project' && $route.name !== 'Peticiones'")
       button.btn.btn-text(@click="switchSidebar")
-        i.fas.fa-bars.fa-fw
+        i.far.fa-bars.fa-fw
     router-link.brand(to="/")
-      img(:src="require('../../assets/img/icon.png')" alt="alt")
+      img(src="" alt="")
       span Super App City
-    .main-navbar-toggler
-      button.btn.btn-text(@click="switchNavbar")
-        i.fas.fa-bars.fa-fw
+    .navbar-search
+      .input-search(:class="{ searching: getSearch }")
+        input(type="text" placeholder="Buscar" @input="(e) => setSearch(e.target.value)")
+        button(@click=""): i.fas.fa-search.fa-fw
     .navbar-actions
       router-link.btn.btn-text(to="/" v-if="isAuthenticated")
         i.fas.fa-tasks-alt.fa-fw

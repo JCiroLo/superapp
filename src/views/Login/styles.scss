@@ -1,36 +1,13 @@
 .container-login {
   overflow-x: hidden;
-
-  .background {
-    position: fixed;
-    z-index: -1;
-
-    svg {
-      width: 100vw;
-      height: calc(100vh - $navbar-height);
-      .main {
-        z-index: 1;
-        fill: $primary;
-      }
-      .back1 {
-        z-index: -50;
-        transform: translateX(10px);
-        fill: rgba($secondary, 0.75);
-      }
-      .back2 {
-        z-index: -50;
-        transform: translateX(20px);
-        fill: rgba($background-dark, 0.75);
-      }
-    }
-  }
+  margin-top: -$navbar-height;
 
   .login-box {
-    min-height: calc(100vh - $navbar-height);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
 
     &.error {
       .login-form {
@@ -51,16 +28,6 @@
       }
     }
 
-    .thumbnail {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      img {
-        width: 60%;
-      }
-    }
-
     .login-form {
       display: flex;
       flex-direction: column;
@@ -69,12 +36,9 @@
 
       h2 {
         text-align: center;
-        font-size: 24px;
-        font-weight: 500;
-        padding: 10px 0;
-        margin: 0;
-        border-radius: 5px 5px 0 0;
-        background-color: white;
+        font-size: 36px;
+        font-weight: 300;
+        margin-bottom: 15px;
       }
 
       form {
@@ -82,7 +46,7 @@
         flex-direction: column;
         padding: 10px;
         border-radius: 0 0 5px 5px;
-        width: 60%;
+        width: 100%;
 
         .form-field {
           position: relative;
@@ -90,28 +54,46 @@
           flex-direction: column;
           margin: 10px 0;
 
-          i {
+          i.input-icon {
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 9px;
+            left: 15px;
             display: flex;
             align-items: center;
             font-size: 18px;
             transition: color 0.2s;
           }
-          input {
-            padding: 8px 12px 8px 35px;
+
+          button {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            right: 5px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             border: none;
-            border-bottom: 1px solid $border;
-            border-radius: 0;
-            outline: none;
-            transition: border-color 0.2s;
-            &:focus {
-              border-color: $primary;
+            color: $font-color;
+            background-color: transparent;
+
+            &:hover {
+              background-color: $shadow;
             }
           }
-          input:focus ~ i {
+
+          input {
+            padding: 12px 12px 12px 45px;
+            border: none;
+            border-radius: $border-radius;
+            outline: none;
+            box-shadow: 0 5px 10px $card-shadow;
+            transition: border-color 0.2s;
+          }
+          input:focus ~ i.input-icon {
             color: $secondary;
           }
         }
@@ -124,21 +106,6 @@
         button {
           width: 100%;
           margin-top: 5px;
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: 992px) {
-  .container-login {
-    .background {
-    }
-    .login-box {
-      flex-direction: column;
-      .login-form {
-        form{
-          width: auto;
         }
       }
     }

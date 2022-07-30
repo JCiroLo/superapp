@@ -18,7 +18,9 @@ export default {
       this.setLoading(true)
 
       if (type === 'project') {
-        const { status, data } = await $Project.deleteProject(request.nombre)
+        const { status, data } = await $Project.deleteProject(
+          request.idProyecto
+        )
         if (status) {
           this.$swal({
             ...swal2Config.success,
@@ -64,7 +66,9 @@ export default {
             title: 'Petición eliminada correctamente.'
           })
 
-          this.projectRequests = this.projectRequests.filter(p => p.id !== request.id)
+          this.projectRequests = this.projectRequests.filter(
+            p => p.id !== request.id
+          )
         } else {
           this.$swal({
             ...swal2Config.error,
@@ -99,6 +103,8 @@ export default {
       data: projects
     } = await $Project.getInterventorProjects()
 
+    console.log(projects)
+
     if (statusProjects) {
       this.projectRequests = projects
     }
@@ -107,6 +113,8 @@ export default {
       status: statusUsers,
       data: users
     } = await $Project.getInterventorUsers()
+
+    console.log(users)
 
     if (statusUsers) {
       this.userRequests = users

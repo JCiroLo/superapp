@@ -1,9 +1,9 @@
-$primary: #388e3c;
+$primary: #e95922;
 $primary-hover: rgba($primary, 0.75);
-$secondary: #8bc34a;
-$danger: tomato;
+$secondary: #e68964;
+$danger: rgb(255, 27, 27);
 
-$background-dark: #dce775;
+$background-dark: #f5ad91;
 $background-dark-hover: rgba($background-dark, 0.25);
 $background-light: #fff59d;
 $background-light-hover: rgba($background-light, 0.5);
@@ -11,4 +11,6 @@ $background-light-hover: rgba($background-light, 0.5);
 $border: #d7d8da;
 $font-color: #5f6368;
 $disabled: #d0d0d0;
+$input-shadow: rgba(black, 0.1);
 $shadow: rgba(black, 0.04);
+$card-shadow: rgba(black, 0.1);

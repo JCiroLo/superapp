@@ -4,7 +4,12 @@ import { ROLES } from '../../store/types'
 export default {
   name: 'Navbar',
   computed: {
-    ...mapGetters(['isAuthenticated', 'hasRole', 'navbarState'])
+    ...mapGetters([
+      'isAuthenticated',
+      'hasRole',
+      'navbarState',
+      'getSearch'
+    ])
   },
   data () {
     return {
@@ -12,7 +17,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['switchNavbar', 'switchSidebar']),
+    ...mapMutations(['switchNavbar', 'switchSidebar', 'setSearch']),
     logoutUser () {
       this.$store.commit('logoutUser')
       sessionStorage.removeItem('userData')

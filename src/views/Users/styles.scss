@@ -1,11 +1,14 @@
 $cols: (10, 20, 30, 50, 75, 90, 100);
 
 .users-table {
-  margin: 20px;
-  padding: 10px;
+  margin: $navbar-height + 15px 15px 15px 15px;
+  padding: 15px;
+  background-color: white;
+  border-radius: $border-radius;
 
   @each $col in $cols {
     .flex-#{$col} {
+      width: #{$col} + "%";
       flex-basis: #{$col} + "%";
     }
   }
@@ -20,18 +23,21 @@ $cols: (10, 20, 30, 50, 75, 90, 100);
   }
 
   .users-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
     .user {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 5px;
-      border-radius: $border-radius;
+      border-radius: $border-radius-fixed;
       cursor: pointer;
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: rgba(black, 0.02);
+        background-color: rgba(black, 0.05);
 
         .actions {
           opacity: 1;
@@ -41,8 +47,23 @@ $cols: (10, 20, 30, 50, 75, 90, 100);
 
       .user-data {
         display: flex;
+        align-items: center;
         width: 100%;
-        padding: 15px 0;
+        padding: 7.5px 15px;
+
+        .user-profile-image {
+          display: flex;
+          justify-content: center;
+          
+          img {
+            width: 50%;
+            aspect-ratio: 1;
+            object-fit: contain;
+            border-radius: 50%;
+            background-color: white;
+          }
+        }
+
         span {
           text-align: center;
         }

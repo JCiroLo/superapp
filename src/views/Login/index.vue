@@ -1,22 +1,16 @@
 <template lang="pug">
 .container-login
-  .background.d-none.d-lg-flex
-    svg(viewBox="0 0 500 150" preserveAspectRatio="none")
-      path.back2(d="M-79.81,-45.92 C30.22,131.95 299.98,-65.69 311.26,317.75 L0.00,150.22 L-18.87,75.62 Z")
-      path.back1(d="M-79.81,-45.92 C30.22,131.95 299.98,-65.69 311.26,317.75 L0.00,150.22 L-18.87,75.62 Z")
-      path.main(d="M-79.81,-45.92 C30.22,131.95 299.98,-65.69 311.26,317.75 L0.00,150.22 L-18.87,75.62 Z")
   .login-box(:class="{error: error.status}")
-    .thumbnail.col-12.col-lg-6
-      img(:src="require('@/assets/img/pic-login.png')" alt="")
-    .login-form.col-12.col-lg-6
+    .login-form.col-8.col-md-6.col-lg-4
       h2 Iniciar sesión
       form(noValidate @submit.prevent="handleLogin")
         .form-field
-          input#username(type="text" placeholder="Usuario" @input="handleInput" @click="removeError")
-          i.fas.fa-user
+          input(type="text" placeholder="Usuario" v-model="userData.username" @click="removeError")
+          i.input-icon.fas.fa-user
         .form-field
-          input#password(type="password" placeholder="Contraseña" @input="handleInput" @click="removeError")
-          i.fas.fa-lock
+          input(:type="passwordState" placeholder="Contraseña" v-model="userData.password" @click="removeError")
+          i.input-icon.fas.fa-lock
+          button(type="button" @click="switchPasswordState"): i.fas(:class="[passwordState === 'password' ? 'fa-eye' : 'fa-eye-slash' ]")
         p.feedback-error {{error.message}}
         button.btn.btn-main(type='submit') 
           i.fad.fa-spinner-third.fa-spin(v-if="loading")

@@ -1,17 +1,24 @@
 Sidebar(:items="sidebarItems")
   .users-table
     .users-columns
+      span.flex-10 
       span.flex-20 Cédula
-      span.flex-30 Username
+      span.flex-20 Username
       span.flex-20 Nombre
       span.flex-30 Correo
     .users-rows
       .user(v-for="(user, index) in users" :class="{shadow: index % 2 == 1}" :key="index")
         .user-data(@click="selectUser(user)")
+          .user-profile-image.flex-10
+            img(:src="user.profileImage" alt="profile_image")
           span.flex-20 {{user.cedula}}
-          span.flex-30 {{user.username}}
+          span.flex-20 {{user.username}}
           span.flex-20 {{user.name}} {{user.lastName}}
           span.flex-30 {{user.email}}
+
+  button.btn-float.btn.btn-main(@click="creatingUser = true")
+    i.fal.fa-plus.fa-fw
+    span Crear usuario
 
   Modal(:show="selectedUser" @closeModal="selectedUser = null")
     template(#modal-header)
@@ -49,10 +56,6 @@ Sidebar(:items="sidebarItems")
         button.btn.btn-danger-outline.me-auto(@click="requestDeleteUser()") Eliminar usuario
         button.btn.btn-main-outline(@click="selectedUser = null") Cancelar
         button.btn.btn-main.ms-3(@click="editUser") Editar usuario
-
-  button.btn-float.btn.btn-main(@click="creatingUser = true")
-    i.fal.fa-plus.fa-fw
-    span Crear usuario
 
   Modal(:show="creatingUser" @closeModal="creatingUser = false")
     template(#modal-header)

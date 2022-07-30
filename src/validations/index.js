@@ -20,7 +20,6 @@ export default {
           }
         }
       }
-      console.log(k)
       return false
     })
     return isValid
