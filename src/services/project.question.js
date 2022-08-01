@@ -31,11 +31,12 @@ export default {
     }
   },
 
-  updateQuestion: async (projectName, questionData) => {
+  updateQuestion: async questionData => {
+    console.log(questionData)
     const formData = $Utils.generateFormData(questionData)
     try {
       const { data } = await axios.put(
-        `${API_URL}/preguntasrespuestas/preguntasrespuestas/preguntas/editar/${projectName}`,
+        `${API_URL}/preguntasrespuestas/preguntasrespuestas/preguntas/editar/`,
         formData
       )
       return { status: true, data }

@@ -14,9 +14,9 @@ Accordion.project-question
       template(#label="{ checked, classList }")
         strong(:class="classList.label") {{ checked ? 'Si' : 'No' }}
     .project-question-actions
-      button.btn.btn-text(@click="() => { newQuestion = question; actions.question = 'update'; modal.createQuestion = true; }")
+      button.btn.btn-text(@click="$emit('updateQuestion', question)")
         i.fas.fa-pencil.fa-fw
         span.ms-1 Editar
-      button.btn.btn-text(type='submit')
+      button.btn.btn-text(@click="$emit('deleteQuestion', question)")
         i.fas.fa-trash.fa-fw
         span.ms-1 Eliminar

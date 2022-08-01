@@ -137,13 +137,7 @@ export default {
 
         this.modal.createQuestion = false
       } else if (this.actions.question === 'update') {
-        const { status } = await $Question.updateQuestion(
-          this.$route.params.projectName,
-          {
-            ...this.newQuestion,
-            numeroOpciones: this.newQuestion.opciones.length
-          }
-        )
+        const { status } = await $Question.updateQuestion(this.newQuestion)
         if (status) {
           this.$swal({
             ...swal2Config.success,

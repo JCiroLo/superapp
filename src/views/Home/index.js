@@ -280,7 +280,7 @@ export default {
             status: statusThumnb,
             data: dataThumb
           } = await $Project.insertImage(
-            this.currentProject.nombre,
+            this.currentProject.codigoProyecto,
             this.thumbnail
           )
 
