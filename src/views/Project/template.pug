@@ -101,19 +101,43 @@ div
             template(v-if="rankingQuestions.length > 0")
               .project-questions-type
                 h2 Ranking
-              ProjectQuestion(v-for="(question, index) in rankingQuestions" :key="index" :question="question" @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}")
+              ProjectQuestion(
+                v-for="(question, index) in rankingQuestions" 
+                :key="index" 
+                :question="question" 
+                @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}"
+                @deleteQuestion="deleteQuestion"
+              )
             template(v-if="hundredDollarsQuestions.length > 0")
               .project-questions-type
                 h2 $100
-              ProjectQuestion(v-for="(question, index) in hundredDollarsQuestions" :key="index" :question="question" @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}")
+              ProjectQuestion(
+                v-for="(question, index) in hundredDollarsQuestions" 
+                :key="index" 
+                :question="question" 
+                @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}"
+                @deleteQuestion="deleteQuestion"
+              )
             template(v-if="kanoModelQuestions.length > 0")
               .project-questions-type
                 h2 Kano
-              ProjectQuestion(v-for="(question, index) in kanoModelQuestions" :key="index" :question="question" @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}")
+              ProjectQuestion(
+                v-for="(question, index) in kanoModelQuestions" 
+                :key="index" 
+                :question="question" 
+                @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}"
+                @deleteQuestion="deleteQuestion"
+              )
             template(v-if="likertQuestions.length > 0")
               .project-questions-type
                 h2 Likert
-              ProjectQuestion(v-for="(question, index) in likertQuestions" :key="index" :question="question" @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}")
+              ProjectQuestion(
+                v-for="(question, index) in likertQuestions" 
+                :key="index" 
+                :question="question" 
+                @updateQuestion="(q) => {newQuestion = question; actions.question = 'update'; modal.createQuestion = true;}"
+                @deleteQuestion="deleteQuestion"
+              )
 
     template(#slot_3)
       button.btn-float.btn.btn-main(@click="modal.createComment = !modal.createComment")

@@ -46,5 +46,19 @@ export default {
         data: 'Ha ocurrido un problema, inténtelo de nuevo'
       }
     }
+  },
+
+  deleteQuestion: async (projectId, questionId, formId) => {
+    try {
+      const { data } = await axios.delete(
+        `${API_URL}/preguntas/preguntas/una/${projectId}/${questionId}/${formId}/`
+      )
+      return { status: true, data }
+    } catch (error) {
+      return {
+        status: false,
+        data: 'Ha ocurrido un problema, inténtelo de nuevo'
+      }
+    }
   }
 }

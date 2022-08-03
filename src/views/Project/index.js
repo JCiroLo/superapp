@@ -154,6 +154,21 @@ export default {
 
       this.setLoading(false)
     },
+    async deleteQuestion ({ numeroPregunta }) {
+      if (confirm('¿Estás seguro que quieres eliminar la pregunta?')) {
+        const { status } = await $Question.deleteQuestion(
+          this.$route.params.projectId,
+          numeroPregunta,
+          1
+        )
+        if (status) {
+          this.$swal({
+            ...swal2Config.success,
+            title: 'Pregunta eliminada.'
+          })
+        }
+      }
+    },
     async addComment () {
       if (!this.newComment.comentario) {
         this.$swal({
