@@ -1,0 +1,17 @@
+.container-login
+  .login-box(:class="{error: error.status}")
+    .login-form.col-8.col-md-6.col-lg-4
+      h2 Iniciar sesión
+      form(noValidate @submit.prevent="handleLogin")
+        .form-field
+          input(type="text" placeholder="Usuario" v-model="userData.username" @click="removeError")
+          i.input-icon.fas.fa-user
+        .form-field
+          input(:type="passwordState" placeholder="Contraseña" v-model="userData.password" @click="removeError")
+          i.input-icon.fas.fa-lock
+          button(type="button" @click="switchPasswordState"): i.fas(:class="[passwordState === 'password' ? 'fa-eye' : 'fa-eye-slash' ]")
+        p.feedback-error {{error.message}}
+        button.btn.btn-main(type='submit') 
+          i.fad.fa-spinner-third.fa-spin(v-if="loading")
+          span(v-else) Iniciar sesión
+      
